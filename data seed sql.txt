@@ -1,0 +1,11 @@
+INSERT INTO `questions` (`id`, `qu_name`, `created_at`, `updated_at`) VALUES (NULL, 'Bermain Game Setiap Hari', NULL, NULL);
+INSERT INTO `questions` (`id`, `qu_name`, `created_at`, `updated_at`) VALUES (NULL, 'Lama Bermain dalam Sehari', NULL, NULL);
+INSERT INTO `questions` (`id`, `qu_name`, `created_at`, `updated_at`) VALUES (NULL, 'Dimarahin Orang Tua karena bermain Game', NULL, NULL);
+INSERT INTO `questions` (`id`, `qu_name`, `created_at`, `updated_at`) VALUES (NULL, 'Merasa Pusing saat main Game', NULL, NULL);
+INSERT INTO `questions` (`id`, `qu_name`, `created_at`, `updated_at`) VALUES (NULL, 'Lupa mengerjakan tugas karena bermain game', NULL, NULL);
+INSERT INTO `questions` (`id`, `qu_name`, `created_at`, `updated_at`) VALUES (NULL, 'Marah Saat bermain game', NULL, NULL);
+INSERT INTO `questions` (`id`, `qu_name`, `created_at`, `updated_at`) VALUES (NULL, 'Membeli Voucher Game', NULL, NULL);
+INSERT INTO `questions` (`id`, `qu_name`, `created_at`, `updated_at`) VALUES (NULL, 'Level Tertingi Game', NULL, NULL);
+INSERT INTO `questions` (`id`, `qu_name`, `created_at`, `updated_at`) VALUES (NULL, 'Merasa Malu Saat Kalah bermain game', NULL, NULL);
+
+INSERT INTO `qu_answers` (`id`, `qu_id`, `answer`, `value`, `type`, `created_at`, `updated_at`) VALUES (NULL, '1', 'Tidak', '1', 'radio', NULL, NULL), (NULL, '1', 'Ya', '2', 'radio', NULL, NULL), (NULL, '2', 'Kurang Dari 2 Jam', '1', 'radio', NULL, NULL), (NULL, '2', 'Lebih Dari 2 Jam', '2', 'radio', NULL, NULL), (NULL, '3', 'tidak', '1', 'radio', NULL, NULL), (NULL, '3', 'Ya', '2', 'radio', NULL, NULL), (NULL, '4', 'Tidak', '1', 'radio', NULL, NULL), (NULL, '4', 'Ya', '2', 'radio', NULL, NULL), (NULL, '4', 'Kadang-kadang', '3', 'radio', NULL, NULL)
