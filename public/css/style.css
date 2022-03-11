@@ -280,9 +280,10 @@ nav.navbarku {
 
 .title {
     font-size: 2rem;
-    color: #ffffff;
-    text-shadow: #007bff 0px 0px 4px, #007bff 0px 0px 4px, #007bff 0px 0px 4px,
-        #007bff 0px 0px 4px, #007bff 0px 0px 4px, #007bff 0px 0px 4px;
+    color: #0063cc;
+    font-weight: 600;
+    /* text-shadow: #007bff 0px 0px 4px, #007bff 0px 0px 4px, #007bff 0px 0px 4px,
+        #007bff 0px 0px 4px, #007bff 0px 0px 4px, #007bff 0px 0px 4px; */
 }
 @media screen and (max-width: 1050px) {
 }
