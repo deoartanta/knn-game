@@ -20,36 +20,31 @@ class DataUji extends Seeder
                 [
                     'no' => '1',
                     'kelas' => '1',
-                    'kelas_prediksi' => '',
-                    'jml_k' => ''
+                    'jml_k' => 3
                 ]);
             DB::table('dt_evals')->insert(
                 [
                     'no' => '2',
                     'kelas' => '1',
-                    'kelas_prediksi' => '',
-                    'jml_k' => ''
+                    'jml_k' => 3
                 ]);
             DB::table('dt_evals')->insert(
                 [
                     'no' => '3',
                     'kelas' => '0',
-                    'kelas_prediksi' => '',
-                    'jml_k' => ''
+                    'jml_k' => 3
                 ]);
             DB::table('dt_evals')->insert(
                 [
                     'no' => '4',
                     'kelas' => '0',
-                    'kelas_prediksi' => '',
-                    'jml_k' => ''
+                    'jml_k' => 3
                 ]);
             DB::table('dt_evals')->insert(
                 [
                     'no' => '5',
                     'kelas' => '0',
-                    'kelas_prediksi' => '',
-                    'jml_k' => ''
+                    'jml_k' => 3
                 ]);
         }
         // Prediction Data
