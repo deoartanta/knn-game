@@ -246,7 +246,7 @@ a:hover {
     width: 100vw;
     background: url(../img/bg.png) no-repeat;
     background-position-x: center;
-    background-position-y: -60px;
+    /* background-position-y: -50px; */
     background-size: cover;
 }
 
@@ -280,7 +280,7 @@ nav.navbarku {
 
 .title {
     font-size: 2rem;
-    color: #0063cc;
+    color: #3d36aa;
     font-weight: 600;
     /* text-shadow: #007bff 0px 0px 4px, #007bff 0px 0px 4px, #007bff 0px 0px 4px,
         #007bff 0px 0px 4px, #007bff 0px 0px 4px, #007bff 0px 0px 4px; */

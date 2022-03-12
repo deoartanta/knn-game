@@ -8,6 +8,7 @@
 	{{-- <link rel="stylesheet" href="/css/app.css"> --}}
 	<link rel="stylesheet" href="{{ asset('assets\bootstrap-4.3.1\dist\css\bootstrap.min.css')}}">
 	<link rel="stylesheet" href="{{ asset('assets\perfect-scrollbar-1.4.0\css\perfect-scrollbar.css')}}">
+	<link rel="stylesheet" href="{{ asset('assets\fontawesome-free\css\all.min.css') }}">
 	<link rel="stylesheet" href="{{ asset('css\style.css')}}">
 	@yield('style')
 	<title>@yield('judul')KNN</title>
@@ -34,14 +35,14 @@
 			<div class="collapse navbar-collapse" id="navbarNavDropdown">
 				<ul class="navbar-nav justify-content-center w-100">
 					<li class="nav-item">
-						<a class="nav-link s-o-white text-uppercase js-scroll-trigger" href="#home">Home <span class="sr-only">(current)</span></a>
-					</li>
-
-					<li class="nav-item ">
-						<a class="nav-link s-o-white text-uppercase" href="#about">About</a>
+						<a class="nav-link s-o-white text-uppercase js-scroll-trigger" href="#home" style="font-weight: 600;">Home <span class="sr-only">(current)</span></a>
 					</li>
 
 					<li class="nav-item">
+						<a class="nav-link s-o-white text-uppercase" style="font-weight: 600;" href="#about">About</a>
+					</li>
+
+					<!-- <li class="nav-item">
 						<a class="nav-link s-o-white text-uppercase js-scroll-trigger" href="{{ route('prediction.index') }}">Prediction</a>
 					</li>
 					<li class="nav-item dropdown">
@@ -56,17 +57,17 @@
 					</li>
 					<li class="nav-item ">
 						<a class="nav-link s-o-white text-uppercase" href="#contact">contact</a>
-					</li>
+					</li> -->
 					@guest
 					@if (Route::has('login'))
 					<li class="nav-item ">
-						<a class="nav-link s-o-white text-uppercase" href="{{ route('login') }}">{{ __('Login') }}</a>
+						<a class="nav-link s-o-white text-uppercase" style="font-weight: 600;" href="{{ route('login') }}">{{ __('Login') }}</a>
 					</li>
 					@endif
 
 					@if (Route::has('register'))
 					<li class="nav-item ">
-						<a class="nav-link s-o-white text-uppercase" href="{{ route('register') }}">{{ __('Register') }}</a>
+						<a class="nav-link s-o-white text-uppercase" style="font-weight: 600;" href="{{ route('register') }}">{{ __('Register') }}</a>
 					</li>
 					@endif
 					@endguest
@@ -77,7 +78,7 @@
 						<a class="nav-link s-o-white dropdown-toggle text-uppercase" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 							{{ Auth::user()->name }}
 						</a>
-						<div class="dropdown-menu dropdown-menu-lg-right  bg-transparent" aria-labelledby="navbarDropdownMenuLink">
+						<div class="dropdown-menu dropdown-menu-lg-right bg-transparent" style="border: 0;" aria-labelledby="navbarDropdownMenuLink">
 							<div class="card mr-2 ml-2" style="width: 18rem;">
 								<div class="card-body text-center">
 									<h5 class="card-title text-uppercase">{{ Auth::user()->name }}</h5>
@@ -89,7 +90,7 @@
 									</p>
 								</div>
 								<div class="card-body d-inline-block">
-									<a class="card-link d-inline-block text-uppercase" href="{{ route('logout') }}" onclick="event.preventDefault();
+									<a class="card-link d-inline-block text-uppercase text-danger" href="{{ route('logout') }}" onclick="event.preventDefault();
 										document.getElementById('logout-form').submit();">
 										{{ __('Logout') }}
 									</a>
@@ -99,7 +100,7 @@
 									</form>
 									<a name="profile" id="profile" class="btn btn-outline-success btn-sm float-right" href="#home" role="button">Profile</a>
 									@if (Auth::user()->level==1)
-									<a class="btn btn-outline-primary btn-sm float-right mr-2" href="#home">Admin</a>
+									<a class="btn btn-outline-primary btn-sm float-right mr-2" href="{{ route('home') }}">Admin</a>
 									@endif
 								</div>
 							</div>

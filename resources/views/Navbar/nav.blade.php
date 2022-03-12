@@ -1,15 +1,15 @@
 @extends('template')
 @section('judul')
-	@yield('judul1')
+@yield('judul1')
 @endsection
 @section('nav-hide','d-none')
 @section('content')
-	<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
-    @auth
-      <a class="navbar-brand text-uppercase" href="{{ url('/') }}">
-        {{ Auth::user()->name }}
-      </a>
-    @endauth
+<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+  @auth
+  <a class="navbar-brand text-uppercase" href="{{ url('/') }}">
+    {{ Auth::user()->name }}
+  </a>
+  @endauth
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -25,9 +25,9 @@
       <li class="nav-item">
         <a class="nav-link @yield('prediction')" href="{{ route('prediction.create') }}">Prediction</a>
       </li>
-      <li class="nav-item">
+      <!-- <li class="nav-item">
         <a class="nav-link @yield('pf')" href="{{ url('/portfolio') }}">Portfolio</a>
-      </li>
+      </li> -->
     </ul>
     {{-- <form class="form-inline my-2 my-lg-0">
       <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
