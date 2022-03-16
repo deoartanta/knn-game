@@ -31,6 +31,7 @@ class CreateDistanceTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('distance');
+        
+        Schema::dropIfExists('distances');
     }
 }

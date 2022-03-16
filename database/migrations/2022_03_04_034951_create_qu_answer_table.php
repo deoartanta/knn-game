@@ -32,6 +32,11 @@ class CreateQuAnswerTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('qu_answer');
+        Schema::table('qu_answers', function (Blueprint $table) {
+            $table->dropForeign(['qu_id']); // fk first
+
+            // $table->dropColumn('qu_id'); // then column
+        });
+        Schema::dropIfExists('qu_answers');
     }
 }
