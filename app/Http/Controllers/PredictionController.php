@@ -68,7 +68,7 @@ class PredictionController extends Controller
         $jml_k = (($jml_k_tmp%2)==0?($jml_k_tmp+1):$jml_k_tmp);
         
         $db_dt_evals->no = $no_data;
-        // $db_dt_evals->save();                
+        $db_dt_evals->save();                
         $up_dt_evals = DtEvals::where('jml_k','<>','0')->update(['jml_k'=>$jml_k]);
         
         
@@ -84,7 +84,7 @@ class PredictionController extends Controller
             $i++;
         }
         $prediction = new Prediction;
-        // $prediction->insert($keyall);
+        $prediction->insert($keyall);
         $pred_dt = $this->normalisasi($dt_evals,$prediction->get());
         $dist = $this->hitung(true,$dt_evals);
 
@@ -106,7 +106,7 @@ class PredictionController extends Controller
         // echo '</br> Jumlah Ringan='.$jml_r.'</br> Jumlah Berat='.$jml_b;
         $db_dt_evals->kelas = $jml_r<$jml_b?1:0;
         $db_dt_evals->jml_k = $jml_k;
-        // $db_dt_evals->save();
+        $db_dt_evals->save();
         // return $dist ;
         return redirect('prediction')->with([
                             'sts'=>true,
@@ -181,21 +181,28 @@ class PredictionController extends Controller
                     $no = 0;
                     $jml_r = 0;
                     $jml_b = 0;
-                    foreach (Distances::all() as $key => $val_dist) {
-                        if ($no<$val_evals->jml_k) {
+                    $total = 0;
+                    foreach (Distances::orderBy('nilai', 'ASC')->get() as $key => $val_dist) {
+                        if ($no<$val_evals2->jml_k) {
                             if ($val_dist->kelas==0) {
-                            $jml_r++;
-                        } else if($val_dist->kelas==1){
-                            $jml_b++;
-                        }
+                                $jml_r++;
+                            } else if($val_dist->kelas==1){
+                                $jml_b++;
+                            }
+                            $total +=$val_dist->kelas;
+                            // echo "</br>total + ".$val_dist->kelas."=>".$total."</br>";
+                            // echo "</br>jumlah K =>".$val_evals2->jml_k."</br>";
                         
-                    }
-                    $no++;
+                        }
+                        $no++;
                     }
                     // echo '</br> Jumlah Ringan='.$jml_r.'</br> Jumlah Berat='.$jml_b;
+                    $hsl_akhir = $total/$val_evals->jml_k;
+                    $kelas = $hsl_akhir>=0.5?0:1;
                     $update_DtEvals = DtEvals::find($val_evals->id);
-                    $update_DtEvals->kelas_prediksi = $jml_r<$jml_b?1:0;
+                    $update_DtEvals->kelas_prediksi = $kelas;
                     $update_DtEvals->save();
+                    // echo "Hasil Akhir==>".$hsl_akhir."</br> Kelas =>".$kelas."</br>";
                 }
                 // echo '</br>Hasil Perhitungan => '.$hsl_hitung_dt;
                 // echo '</br>Akar Perhitungan => '.sqrt($hsl_hitung_dt);

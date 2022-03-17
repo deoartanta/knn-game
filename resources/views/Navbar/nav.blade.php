@@ -20,7 +20,7 @@
         <a class="nav-link" href="{{ url('/') }}">Home <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link @yield('evalution')" href="{{ url('/portfolio') }}">Evalution Data</a>
+        <a class="nav-link @yield('evalution')" href="{{ route('analytic.index') }}">Confution Matrix</a>
       </li>
       <li class="nav-item">
         <a class="nav-link @yield('prediction')" href="{{ route('prediction.create') }}">Prediction</a>

@@ -32,6 +32,7 @@ Auth::routes();
 
 // Auth();
 Route::resource('/prediction',PredictionController::class);
+Route::resource('/analytic',analyticController::class);
 Route::get('/home', 'HomeController@index')->name('home');
 
 // Auth::routes();
