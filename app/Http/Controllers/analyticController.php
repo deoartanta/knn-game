@@ -76,7 +76,7 @@ class analyticController extends Controller
             'spesi'=>$spesi,
             'auc'=>$auc
         ];
-        return ((view()->exists('prediction.matrix'))?view('prediction.matrix',$data):'').$this->createAlert("Sukses","Sukses mengambil data","success");
+        return (view()->exists('prediction.matrix'))?view('prediction.matrix',$data):'';
     }
 
     /**
@@ -92,6 +92,8 @@ class analyticController extends Controller
         $swal .="text:'".$message."',";
         $swal .="type: '".$type."',";
         $swal .="showConfirmButton: true";
+        // $swal .="allowOutsideClick: false,";
+        // $swal .="allowEscapeKey: false";
 
         $swal .="});</script>";
         return $swal;

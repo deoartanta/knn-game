@@ -7,6 +7,7 @@ use App\Models\Distances;
 use App\Models\DtEvals;
 use App\Models\Question;
 use App\Models\Normalisasi;
+use App\Http\Controllers\analyticController;
 use Illuminate\Http\Request;
 
 class PredictionController extends Controller
@@ -23,7 +24,7 @@ class PredictionController extends Controller
         $dt_evals = $db_dt_evals->get();
         // return $this->hitung(90);
         // return $dt_evals;
-       return (view()->exists('prediction.index'))?view('prediction.index'):'';
+       return ((view()->exists('prediction.index'))?view('prediction.index'):'');
     }
 
     /**
@@ -36,7 +37,7 @@ class PredictionController extends Controller
         // $db_dt_evals = new DtEvals;
         // $dt_evals = $db_dt_evals->get();
         // return $dt_evals;
-        return (view()->exists('prediction.index'))?view('prediction.index'):'';
+        return ((view()->exists('prediction.index'))?view('prediction.index'):'');
     }
 
     /**
@@ -50,9 +51,11 @@ class PredictionController extends Controller
         $keyadd=[];
         $keyall=[];
         $i=0;
+        $analyticControl = new analyticController;
         $db_dt_evals = new DtEvals;
         $dt_evals = $db_dt_evals->get();
         $no_data = ($dt_evals->count()+1);
+
 
         $jml_qu = Question::all()->count();
         $prediction = new Prediction;
