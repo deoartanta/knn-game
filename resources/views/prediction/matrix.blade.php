@@ -1,4 +1,7 @@
 @extends('layouts.admin')
+@section('mo-prediction','menu-open')
+@section('prediction','active')
+@section('c-matrix','active')
 
 @section('content')
 <div class="content-header">

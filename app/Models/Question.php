@@ -10,6 +10,6 @@ class Question extends Model
     use HasFactory;
     protected $table = "questions";
     protected $fillable = [
-        'qu_name',
+        'id','qu_name',
     ];
 }

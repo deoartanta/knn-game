@@ -1,4 +1,5 @@
 @extends('layouts.admin')
+@section('dashboard','active')
 
 @section('content')
 <div class="content-header">

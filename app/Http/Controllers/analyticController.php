@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Normalisasi;
 use App\Models\Prediction;
 use App\Models\DtEvals;
+use App\Models\Question;
 use App\Http\Controllers\PredictionController;
 
 class analyticController extends Controller
@@ -23,6 +25,15 @@ class analyticController extends Controller
         $data = $this->createConfutionMatrix();
         $data['data']=$dtEvals;
         return (view()->exists('prediction.matrix'))?view('prediction.matrix',$data):'';
+    }
+    public function normalizeDTPage(){
+        $pred_controll = new PredictionController;
+        $pred_controll->normalisasi(DtEvals::all(),Prediction::all());
+        $data['data_eval']=DtEvals::all();
+        $data['data_pred']=Prediction::all();
+        $data['question']=Question::all();
+        $data['n_data']=Normalisasi::all();
+        return (view()->exists('prediction.n-data'))?view('prediction.n-data',$data):'';
     }
     public function createConfutionMatrix(){
         $dtEvals = DtEvals::all();        

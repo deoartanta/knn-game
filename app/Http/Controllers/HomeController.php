@@ -50,6 +50,10 @@ class HomeController extends Controller
         }
     }
     public function confutionMatrix(){
-        return redirect('confution-matrix');
+        return $this->analytic_controll->index();
+    }
+    
+    public function normalizeData(){
+        return $this->analytic_controll->normalizeDTPage();
     }
 }
