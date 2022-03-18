@@ -4,6 +4,7 @@
 @endsection
 @section('nav-hide','d-none')
 @section('content')
+{{--
 <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
   @auth
   <a class="navbar-brand text-uppercase" href="{{ url('/') }}">
@@ -20,7 +21,7 @@
         <a class="nav-link" href="{{ url('/') }}">Home <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link @yield('evalution')" href="{{ url('/portfolio') }}">Evalution Data</a>
+        <a class="nav-link @yield('evalution')" href="{{ route('analytic.index') }}">Confution Matrix</a>
       </li>
       <li class="nav-item">
         <a class="nav-link @yield('prediction')" href="{{ route('prediction.create') }}">Prediction</a>
@@ -29,12 +30,9 @@
         <a class="nav-link @yield('pf')" href="{{ url('/portfolio') }}">Portfolio</a>
       </li> -->
     </ul>
-    {{-- <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </form> --}}
   </div>
-</nav>
+</nav> 
+--}}
 
 @yield('content1')
 

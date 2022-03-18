@@ -18,12 +18,13 @@ class CreateDtEvalsTable extends Migration
             $table->BigInteger('no')->index();
             $table->integer('kelas')->nullable();
             $table->integer('kelas_prediksi')->nullable();
-            $table->bigInteger('jml_k');
+            $table->bigInteger('jml_k')->nullable();
             $table->timestamps();
         });
         Schema::table('pred_datas', function (Blueprint $table) {
             $table->foreign('no_data')
                 ->references('no')->on('dt_evals')->onDelete('cascade');
+            $table->softDeletes();
         });
     }
 
@@ -34,6 +35,12 @@ class CreateDtEvalsTable extends Migration
      */
     public function down()
     {
+        Schema::table('pred_datas', function (Blueprint $table) {
+            $table->dropForeign(['no_data']); // fk first
+            
+            // $table->dropColumn('no_data'); // then column
+        });
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('dt_evals');
     }
 }

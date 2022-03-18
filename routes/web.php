@@ -16,25 +16,12 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-
-Route::get('/mahasiswa', 'mhsController@index');
-Route::get('/myprofil', 'mhsController@profil');
-Route::get('/portfolio', 'mhsController@pf');
-Route::get('/dosen', 'dosenController@index');
-Route::redirect('/infomhs', 'mahasiswa');
-
-route::get('/dataMhs', 'mhsController@index');
-
 Auth::routes();
-// var_dump(Auth::users());
-// die();
-// Auth::check();
 
-// Auth();
 Route::resource('/prediction', PredictionController::class);
 Route::resource('/user', UserController::class);
+// Route::resource('/confution-matrix',analyticController::class);
 Route::get('/home', 'HomeController@index')->name('home');
-
-// Auth::routes();
-
-// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/confution-matrix', 'HomeController@confutionMatrix')->name('c-matrix');
+Route::get('/normalize-data', 'HomeController@normalizeData')->name('n-data');
+Route::get('/evalution-data', 'HomeController@evalData')->name('e-data');

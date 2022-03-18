@@ -9,6 +9,7 @@
 	<link rel="stylesheet" href="{{ asset('assets\bootstrap-4.3.1\dist\css\bootstrap.min.css')}}">
 	<link rel="stylesheet" href="{{ asset('assets\perfect-scrollbar-1.4.0\css\perfect-scrollbar.css')}}">
 	<link rel="stylesheet" href="{{ asset('assets\fontawesome-free\css\all.min.css') }}">
+	<link rel="stylesheet" href="{{ asset('assets\sweet\sweetalert2.css') }}">
 	<link rel="stylesheet" href="{{ asset('css\style.css')}}">
 	@yield('style')
 	<title>@yield('judul')KNN</title>
@@ -116,6 +117,7 @@
 	<script src="{{ asset('js\jquery-3.4.1.js')}}"></script>
 	<script src="{{ asset('assets\bootstrap-4.3.1\dist\js\bootstrap.bundle.min.js')}}"></script>
 	<script src="{{ asset('assets\perfect-scrollbar-1.4.0\dist\perfect-scrollbar.js')}}"></script>
+	<script src="{{ asset('assets\sweet\sweetalert2.all.js')}}"></script>
 	@yield('script')
 	{{-- <script src="{{ asset('js\New folder\scrolling-nav.js')}}"></script> --}}
 	{{-- {{-- <script src="{{ asset('js\New folder\scrolling-nav.js')}}"></script> --}}

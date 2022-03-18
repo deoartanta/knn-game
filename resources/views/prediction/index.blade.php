@@ -12,13 +12,26 @@
 @section('content1')
 <section id="portfolio" class="portfolio bg-light pt-4 pb-5">
     <div id="scroll-perfect-custom" class="position-relative " style="height: 100vh;">
-        <div class="row justify-content-md-center mt-5">
+        <div class="row justify-content-md-center">
             <div class="col-lg-9">
                 <div class="card">
                     <div class="card-header container">
                         Prediksi Tingkat Bermain Game Pada Anak
                     </div>
+
                     <div class="card-body">
+                        @if (session()->get('sts'))
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="alert-heading">Prediksi Data Berhasil</h4>
+                            <p>Jumlah Ringan = <strong>{{ session()->get('jml_r') }}</strong></p>
+                            <p>Jumlah Berat = <strong>{{ session()->get('jml_b') }}</strong></p>
+                            <p>Jumlah K = <strong>{{ session()->get('jml_k') }}</strong></p>
+                            <p class="mb-2">Hasil prediksi anda adalah <strong>{{ session()->get('jml_r')<session()->get('jml_b')?'Berat':'Ringan' }}</strong></p>
+                        </div>
+                        @endif
                         <h5 class="card-title">Lengkapi data anda</h5>
                         <p class="card-text">Kuesioner dibawah sesuai dengan petunjuk</p>
                     </div>
@@ -156,6 +169,7 @@
                             </div>
                             <div class="float-right">
                                 @csrf
+                                <a href="{{ url('.') }}" class="mt-1 btn btn-secondary"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</a>
                                 <button type="reset" class="mt-1 btn btn-warning"><i class="fa fa-undo mr-2"></i>Reset</button>
                                 <button type="submit" class="mt-1 btn btn-primary"><i class="fa fa-paper-plane mr-2"></i>Prediksi</button>
                             </div>
@@ -177,6 +191,15 @@
     $(document).ready(function() {
         $(".ps__rail-x").css("display", "none");
         $(".ps__rail-y").css("z-index", "1031");
+
+        @if(session()->get('sts'))
+        swal.fire({
+            title: 'Sukses',
+            text: 'Hasil prediksi anda adalah {{ (session()->get('jml_r') > session()->get('jml_b')?"Ringan":"Berat") }}',
+            type: 'success',
+            showConfirmButton: true
+        });
+        @endif
     })
 </script>
 @endsection
