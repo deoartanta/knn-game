@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Prediction;
 use App\Models\DtEvals;
 use App\Http\Controllers\PredictionController;
 
@@ -17,8 +18,14 @@ class analyticController extends Controller
     {
         $dtEvals = DtEvals::all();
         $pred_controll = new PredictionController;
+        $pred_controll->normalisasi($dtEvals,Prediction::all());
         $pred_controll->hitung(false,$dtEvals);
-        
+        $data = $this->createConfutionMatrix();
+        $data['data']=$dtEvals;
+        return (view()->exists('prediction.matrix'))?view('prediction.matrix',$data):'';
+    }
+    public function createConfutionMatrix(){
+        $dtEvals = DtEvals::all();        
         $bb=0;$br=0;$rb=0;$rr=0;$kk=0;$jml_k = $dtEvals->first()->jml_k;
         foreach ($dtEvals as $key => $val) {
             if($val->kelas==$val->kelas_prediksi){
@@ -56,14 +63,12 @@ class analyticController extends Controller
         $F1_score   = 2*($presisi*$recall)/(($presisi+$recall)!=0?($presisi+$recall):1);
         $F1_score   = round($F1_score,2);
 
-        $spesi      =  ($rr /($rr + $br))*100;
+        $spesi      =  ($rr /(($rr + $br)!=0?($rr + $br):1))*100;
         $spesi      = round($spesi,2);
 
         $auc        = (($recall+$spesi)/2);
         $auc        = round($auc,2);
-
-        $data = [
-            "data"=>$dtEvals,
+        $data=[
             'bb'=>$bb,
             'br'=>$br,
             'rb'=>$rb,
@@ -76,7 +81,7 @@ class analyticController extends Controller
             'spesi'=>$spesi,
             'auc'=>$auc
         ];
-        return (view()->exists('prediction.matrix'))?view('prediction.matrix',$data):'';
+        return $data;
     }
 
     /**

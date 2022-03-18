@@ -44,7 +44,7 @@
                                     <tr>
                                         <td>4</td>
                                         <td><b>F Rate</b></td>
-                                        <td><div class="badge badge-danger">{{ $F1_score }} %</div> </td>
+                                        <td><div class="badge badge-danger">{{ $F_rate }} %</div> </td>
                                     </tr>
                                     <tr>
                                         <td>5</td>
@@ -58,7 +58,7 @@
                                     </tr>
                                     <tr>
                                         <td>7</td>
-                                        <td><b>AUC/(Area Under Curver)</b></td>
+                                        <td><b> </b></td>
                                         <td><div class="badge badge-success">{{ $auc }}</div> </td>
                                     </tr>
                                 </tbody>

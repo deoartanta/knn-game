@@ -200,8 +200,8 @@ class PredictionController extends Controller
                         $no++;
                     }
                     // echo '</br> Jumlah Ringan='.$jml_r.'</br> Jumlah Berat='.$jml_b;
-                    $hsl_akhir = $total/$val_evals->jml_k;
-                    $kelas = $hsl_akhir>=0.5?0:1;
+                    // $hsl_akhir = $total/$val_evals->jml_k;
+                    $kelas = $jml_r>$jml_b?0:1;
                     $update_DtEvals = DtEvals::find($val_evals->id);
                     $update_DtEvals->kelas_prediksi = $kelas;
                     $update_DtEvals->save();

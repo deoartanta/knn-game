@@ -40,12 +40,6 @@
         <li class="nav-item">
           <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
         </li>
-        <li class="nav-item d-none d-sm-inline-block">
-          <a href="index3.html" class="nav-link">Home</a>
-        </li>
-        <li class="nav-item d-none d-sm-inline-block">
-          <a href="/dosen" class="nav-link">Dosen</a>
-        </li>
       </ul>
 
       <!-- Right navbar links -->
@@ -83,13 +77,42 @@
         <nav class="mt-2">
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="nav-icon fa fa-calculator"></i>
+              <a href="{{ url('home') }}" class="nav-link active">
+                <i class="nav-icon fas fa-tachometer-alt"></i>
                 <p>
-                  Prediction
+                  Dashboard
                 </p>
               </a>
             </li>
+            <li class="nav-item has-treeview"><!--menu-open -->
+            <a href="#" class="nav-link">
+              <i class="nav-icon fa fa-calculator"></i>
+              <p>
+                Prediction
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="./index.html" class="nav-link active">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Confution Matrix</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="./index2.html" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Normalize Data</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="./index3.html" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Evalution Data</p>
+                </a>
+              </li>
+            </ul>
+          </li>
             <li class="nav-item">
               <a href="#" class="nav-link">
                 <i class="nav-icon far fa-id-card"></i>
@@ -99,7 +122,7 @@
               </a>
             </li>
             <li class="nav-item mt-3">
-              <a href="/" class="nav-link">
+              <a href="{{ url('/') }}" class="nav-link">
                 <i class="nav-icon fas fa-home"></i>
                 <p>
                   BACK TO HOMEPAGE
@@ -186,7 +209,7 @@
   <script src="admin/plugins/datatables/dataTables.bootstrap4.js"></script>
   <script>
     $(function() {
-      $('#dosen').DataTable({
+      $('#table').DataTable({
         "paging": true,
         "lengthChange": false,
         "searching": true,
