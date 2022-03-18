@@ -41,7 +41,7 @@
                         @enderror
                     </div>
                 </div>
-                <div class="text-left">
+                <!-- <div class="text-left">
                     <div class="">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
@@ -51,12 +51,12 @@
                             </label>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <div class="text-left" style="font-size: 13px;">
                     D<span class="text-lowercase">ON'T HAVE AN ACCOUNT?</span>
                     <a class="span" href="{{ route('register') }}">Register Now</a>
                 </div>
-                <a href="{{ route('password.request') }}">Forgot Password?</a>
+                <!-- <a href="{{ route('password.request') }}">Forgot Password?</a> -->
                 <input type="submit" class="btn lo" value="Login">
             </form>
         </div>

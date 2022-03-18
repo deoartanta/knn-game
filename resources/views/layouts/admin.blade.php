@@ -28,6 +28,21 @@
   <link rel="stylesheet" href="admin/plugins/datatables/dataTables.bootstrap4.css">
   <!-- Google Font: Source Sans Pro -->
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+  <style>
+    *::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    *::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    *::-webkit-scrollbar-thumb {
+      background-color: #b3b3b3;
+      border-radius: 10px;
+      border: 0px;
+    }
+  </style>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -37,15 +52,20 @@
     <nav class="main-header navbar navbar-expand navbar-white navbar-light">
       <!-- Left navbar links -->
       <ul class="navbar-nav">
-        <li class="nav-item">
+        <li class="nav-item d-inline-flex">
           <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
+          <p style="font-size: 1.7em;" class="my-0">
+            <?php if (isset($title)) { ?>
+              <?= $title ?>
+            <?php } ?>
+          </p>
         </li>
-        <li class="nav-item d-none d-sm-inline-block">
+        <!-- <li class="nav-item d-none d-sm-inline-block">
           <a href="index3.html" class="nav-link">Home</a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
           <a href="/dosen" class="nav-link">Dosen</a>
-        </li>
+        </li> -->
       </ul>
 
       <!-- Right navbar links -->
@@ -62,9 +82,9 @@
     <!-- Main Sidebar Container -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
       <!-- Brand Logo -->
-      <a href="#" class="brand-link">
+      <a href="{{ URL::to('/home') }}" class="brand-link">
         <img src="admin/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-        <span class="brand-text font-weight-light">K-NN SYSTEM</span>
+        <span class="brand-text <?= $title == 'Dashboard' ? 'font-weight-medium' : 'font-weight-light' ?>">K-NN SYSTEM</span>
       </a>
 
       <!-- Sidebar -->
@@ -84,17 +104,17 @@
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <li class="nav-item">
               <a href="#" class="nav-link">
-                <i class="nav-icon fa fa-calculator"></i>
+                <i class="nav-icon fa fa-filter"></i>
                 <p>
-                  Prediction
+                  Analytic Test Data
                 </p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="#" class="nav-link">
+              <a href="{{ route('user.index') }}" class="nav-link <?= $title == 'Users Setting' ? 'active' : '' ?>">
                 <i class="nav-icon far fa-id-card"></i>
                 <p>
-                  User Setting
+                  Users Setting
                 </p>
               </a>
             </li>

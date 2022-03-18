@@ -17,13 +17,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/mahasiswa','mhsController@index');
-Route::get('/myprofil','mhsController@profil');
-Route::get('/portfolio','mhsController@pf');
+Route::get('/mahasiswa', 'mhsController@index');
+Route::get('/myprofil', 'mhsController@profil');
+Route::get('/portfolio', 'mhsController@pf');
 Route::get('/dosen', 'dosenController@index');
-Route::redirect('/infomhs','mahasiswa');
+Route::redirect('/infomhs', 'mahasiswa');
 
-route::get('/dataMhs','mhsController@index');
+route::get('/dataMhs', 'mhsController@index');
 
 Auth::routes();
 // var_dump(Auth::users());
@@ -31,7 +31,8 @@ Auth::routes();
 // Auth::check();
 
 // Auth();
-Route::resource('/prediction',PredictionController::class);
+Route::resource('/prediction', PredictionController::class);
+Route::resource('/user', UserController::class);
 Route::get('/home', 'HomeController@index')->name('home');
 
 // Auth::routes();
