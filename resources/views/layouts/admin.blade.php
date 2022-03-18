@@ -106,7 +106,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="" class="nav-link @yield('eval-data')">
+                <a href="{{ route('e-data') }}" class="nav-link @yield('eval-data')">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Evalution Data</p>
                 </a>

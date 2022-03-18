@@ -26,6 +26,13 @@ class analyticController extends Controller
         $data['data']=$dtEvals;
         return (view()->exists('prediction.matrix'))?view('prediction.matrix',$data):'';
     }
+    public function evalDTPage(){
+        $data['data_eval']=DtEvals::all();
+        $data['data_pred']=Prediction::all();
+        $data['question']=Question::all();
+        $data['n_data']=Normalisasi::all();
+        return (view()->exists('prediction.eval-data'))?view('prediction.eval-data',$data):'';
+    }
     public function normalizeDTPage(){
         $pred_controll = new PredictionController;
         $pred_controll->normalisasi(DtEvals::all(),Prediction::all());

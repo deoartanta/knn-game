@@ -16,27 +16,57 @@
 
 <section class="container">
     <div class="container-fluid">
-        <table class="table table-striped table-inverse table-responsive">
-            <thead class="thead-inverse">
-                <tr>
-                    <th>#</th>
-                    <th>Tes</th>
-                    <th>Tes Table</th>
-                </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td scope="row">1</td>
-                        <td>kjkj</td>
-                        <td>kjkj</td>
-                    </tr>
-                    <tr>
-                        <td scope="row">2</td>
-                        <td>kjkj</td>
-                        <td>kjkj</td>
-                    </tr>
-                </tbody>
-        </table>
+        <div class="card card-outline card-primary ">
+            <div class="card-header">
+                <h3 class="card-title">Keterangan</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+            <div class="row">
+                @foreach ($question as $item)
+                <div class="col-4">
+                    <div class="alert alert-secondary" role="alert">
+                        Q{{ $item->id." : ".$item->qu_name }}
+                    </div>
+                </div>
+                @endforeach
+            </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Data Normalisasi</h5>
+                <table class="table table-search table-striped table-inverse">
+                    <thead class="thead-inverse">
+                        <tr>
+                            <th>#</th>
+                            @foreach ($question as $q)
+                            <th>Q{{ $q->id }}</th>
+                            @endforeach
+                            <th>Kelas</th>
+                            <th>Kelas Prediksi</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($data_eval as $eval)  
+                            <tr>
+                                <td scope="row">{{ $eval->no }}</td>
+                                @foreach ($question as $q)
+                                <td>{{ $data_pred->where('qu_id',$q->id)->where('no_data',$eval->no)->first()->value}}</td>
+                                @endforeach
+                                <td scope="row">{{ $eval->kelas==0?"Ringan":"berat" }}</td>
+                                <td scope="row">{{ $eval->kelas_prediksi==0?"Ringan":"berat" }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </section>
 @endsection

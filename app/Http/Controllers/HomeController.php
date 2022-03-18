@@ -56,4 +56,8 @@ class HomeController extends Controller
     public function normalizeData(){
         return $this->analytic_controll->normalizeDTPage();
     }
+    
+    public function evalData(){
+        return $this->analytic_controll->evalDTPage();
+    }
 }
