@@ -49,4 +49,7 @@ class HomeController extends Controller
             return redirect('/');
         }
     }
+    public function confutionMatrix(){
+        return redirect('confution-matrix');
+    }
 }
