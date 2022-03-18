@@ -72,7 +72,7 @@ class analyticController extends Controller
         $akurasi    = ($berat/$jumlah_uji)*100;
         $akurasi    = round($akurasi,2);
 
-        $presisi    = ($bb/($bb + $br))*100;
+        $presisi    = ($bb/(($bb + $br)!=0?($bb + $br):1))*100;
         $presisi    = round($presisi,2);
 
         $recall     = ($bb/(($bb + $rb)!=0?($bb + $rb):1))*100;

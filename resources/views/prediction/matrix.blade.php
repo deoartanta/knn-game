@@ -63,7 +63,7 @@
                                     </tr>
                                     <tr>
                                         <td>7</td>
-                                        <td><b> </b></td>
+                                        <td><b> AUC(Area Under Curver)</b></td>
                                         <td><div class="badge badge-success">{{ $auc }}</div> </td>
                                     </tr>
                                 </tbody>

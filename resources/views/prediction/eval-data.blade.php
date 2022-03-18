@@ -8,7 +8,7 @@
   <div class="container-fluid">
     <div class="row mb-2">
       <div class="col-sm-6">
-        <h1 class="m-0 text-dark">Evalution Data</h1>
+        <h1 class="m-0 text-dark">Evaluation Data</h1>
       </div>
     </div>
   </div>
@@ -40,7 +40,7 @@
         
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">Data Normalisasi</h5>
+                <h5 class="card-title">Evaluation Data</h5>
                 <table class="table table-search table-striped table-inverse">
                     <thead class="thead-inverse">
                         <tr>

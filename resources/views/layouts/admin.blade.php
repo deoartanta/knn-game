@@ -108,13 +108,13 @@
               <li class="nav-item">
                 <a href="{{ route('e-data') }}" class="nav-link @yield('eval-data')">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Evalution Data</p>
+                  <p>Evaluation Data</p>
                 </a>
               </li>
             </ul>
           </li>
             <li class="nav-item">
-              <a href="#" class="nav-link">
+              <a href="{{ route('user.index') }}" class="nav-link @yield('user')">
                 <i class="nav-icon far fa-id-card"></i>
                 <p>
                   User Setting
@@ -207,6 +207,7 @@
   <script src="https://adminlte.io/themes/v3/dist/js/demo.js"></script>
   <script src="{{ asset('admin/plugins/datatables/jquery.dataTables.js') }}"></script>
   <script src="{{ asset('admin/plugins/datatables/dataTables.bootstrap4.js') }}"></script>
+  @yield('script')
   <script>
     $(function() {
       $('.table.table-search').DataTable({

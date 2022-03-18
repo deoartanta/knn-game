@@ -19,6 +19,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::resource('/prediction',PredictionController::class);
+Route::resource('/user',UserController::class);
 // Route::resource('/confution-matrix',analyticController::class);
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/confution-matrix', 'HomeController@confutionMatrix')->name('c-matrix');
