@@ -28,6 +28,21 @@
   <link rel="stylesheet" href="{{ asset('admin/plugins/datatables/dataTables.bootstrap4.css') }}">
   <!-- Google Font: Source Sans Pro -->
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+  <style>
+    *::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    *::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    *::-webkit-scrollbar-thumb {
+      background-color: #b3b3b3;
+      border-radius: 10px;
+      border: 0px;
+    }
+  </style>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -37,8 +52,13 @@
     <nav class="main-header navbar navbar-expand navbar-white navbar-light">
       <!-- Left navbar links -->
       <ul class="navbar-nav">
-        <li class="nav-item">
+        <li class="nav-item d-inline-flex">
           <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
+          <p style="font-size: 1.7em;" class="my-0">
+            <?php if (isset($title)) { ?>
+              <?= $title ?>
+            <?php } ?>
+          </p>
         </li>
       </ul>
 
@@ -84,40 +104,41 @@
                 </p>
               </a>
             </li>
-            <li class="nav-item has-treeview @yield('mo-prediction')"><!--menu-open -->
-            <a href="#" class="nav-link @yield('prediction')">
-              <i class="nav-icon fa fa-calculator"></i>
-              <p>
-                Prediction
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="{{ route('c-matrix') }}" class="nav-link @yield('c-matrix')">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Confution Matrix</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ route('n-data') }}" class="nav-link @yield('n-data')">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Normalize Data</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ route('e-data') }}" class="nav-link @yield('eval-data')">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Evaluation Data</p>
-                </a>
-              </li>
-            </ul>
-          </li>
+            <li class="nav-item has-treeview @yield('mo-prediction')">
+              <!--menu-open -->
+              <a href="#" class="nav-link @yield('prediction')">
+                <i class="nav-icon fa fa-calculator"></i>
+                <p>
+                  Prediction
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{{ route('c-matrix') }}" class="nav-link @yield('c-matrix')">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Confution Matrix</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{ route('n-data') }}" class="nav-link @yield('n-data')">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Normalize Data</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{ route('e-data') }}" class="nav-link @yield('eval-data')">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Evaluation Data</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
             <li class="nav-item">
               <a href="{{ route('user.index') }}" class="nav-link @yield('user')">
                 <i class="nav-icon far fa-id-card"></i>
                 <p>
-                  User Setting
+                  Users Setting
                 </p>
               </a>
             </li>

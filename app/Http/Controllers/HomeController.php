@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-    private $pred_dt,$dt_evals,$analytic_controll,$pred_controll;
+    private $pred_dt, $dt_evals, $analytic_controll, $pred_controll;
     /**
      * Create a new controller instance.
      *
@@ -37,8 +37,8 @@ class HomeController extends Controller
     public function index()
     {
         if (Auth::user()->level == 1) {
-            $this->pred_controll->normalisasi($this->dt_evals->get(),$this->pred_dt->get());
-            $this->pred_controll->hitung(false,$this->dt_evals->get());
+            $this->pred_controll->normalisasi($this->dt_evals->get(), $this->pred_dt->get());
+            $this->pred_controll->hitung(false, $this->dt_evals->get());
             $data = $this->analytic_controll->createConfutionMatrix();
             $data['user'] = Auth::user();
             $data['pred_dt'] = $this->pred_dt->get();
@@ -49,15 +49,18 @@ class HomeController extends Controller
             return redirect('/');
         }
     }
-    public function confutionMatrix(){
+    public function confutionMatrix()
+    {
         return $this->analytic_controll->index();
     }
-    
-    public function normalizeData(){
+
+    public function normalizeData()
+    {
         return $this->analytic_controll->normalizeDTPage();
     }
-    
-    public function evalData(){
+
+    public function evalData()
+    {
         return $this->analytic_controll->evalDTPage();
     }
 }

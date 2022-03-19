@@ -45,8 +45,8 @@ class UserController extends Controller
     }
     public function index()
     {
-        $data['data']=User::All();
-        return (view()->exists('user.index'))?view('user.index',$data):'';
+        $data['data'] = User::All();
+        return (view()->exists('user.index')) ? view('user.index', $data) : '';
     }
 
     /**
@@ -68,10 +68,10 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $user = User::create([
-            'name' =>$request->input('nama'),
-            'email' =>$request->input('email'),
-            'password'=>Hash::make($request->input(['password'])),
-            'level'=>$request->input('level')
+            'name' => $request->input('nama'),
+            'email' => $request->input('email'),
+            'password' => Hash::make($request->input(['password'])),
+            'level' => $request->input('level')
         ]);
         return redirect()->back();
     }

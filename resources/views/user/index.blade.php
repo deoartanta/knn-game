@@ -3,13 +3,13 @@
 
 @section('content')
 <div class="content-header">
-  <div class="container-fluid">
-    <div class="row mb-2">
-      <div class="col-sm-6">
-        <h1 class="m-0 text-dark">User</h1>
-      </div>
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0 text-dark">User</h1>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
 <section class="container">
@@ -101,12 +101,12 @@
                         <label>Level</label>
                         <select class="custom-select" name="level" required>
                             <option name="" value="" disabled selected>--PILIH--</option>
-                                <option value="1">Administrator</option>
-                                <option value="0">Visitor</option>
+                            <option value="1">Administrator</option>
+                            <option value="0">Visitor</option>
                         </select>
                     </div>
                 </div>
-            
+
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-success"><i class="fa fa-plus-circle pr-1" aria-hidden="true"></i>Tambah</button>
                 </div>
@@ -298,13 +298,27 @@
                     $('#formAddUser div.password').html('please length then this text to 8 characters or more (you are currently using '+pass.length+' characters).');
                     e.preventDefault();
                     jmlAksi++;
-                    if(jmlAksi>2){
-                        jmlAksi = 6;
-                        alert("Password must be 8 characters.");
-                    }
+                } else {
+                    $('#formAddUser [name=confirmPass]').removeClass('is-invalid');
+                    $('#formAddUser [name=confirmPass]').addClass('is-valid');
+                    jmlAksi = 0;
                 }
+                if (jmlAksi > 2) {
+                    alert("The password confirmation does not match.");
+                }
+            } else {
+                $('#formAddUser [name=password]').addClass('is-invalid');
+                $('#formAddUser [name=password]').focus();
+                $('#formAddUser div.password').html('please length then this text to 8 characters or more (you are currently using ' + pass.length + ' characters).');
+                e.preventDefault();
+                jmlAksi++;
+                if (jmlAksi > 2) {
+                    jmlAksi = 6;
+                    alert("Password must be 8 characters.");
+                }
+            }
 
-            })
-        });
-    </script>
+        })
+    });
+</script>
 @endsection

@@ -18,19 +18,19 @@
                     <div class="card-header container">
                         Prediksi Tingkat Bermain Game Pada Anak
                     </div>
-                    
+
                     <div class="card-body">
                         @if (session()->get('sts'))
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                             <h4 class="alert-heading">Prediksi Data Berhasil</h4>
-                                <p>Jumlah Ringan = <strong>{{ session()->get('jml_r') }}</strong></p>
-                                <p>Jumlah Berat = <strong>{{ session()->get('jml_b') }}</strong></p>
-                                <p>Jumlah K = <strong>{{ session()->get('jml_k') }}</strong></p>
-                                <p class="mb-2">Hasil prediksi anda adalah <strong>{{ session()->get('jml_r')<session()->get('jml_b')?'Berat':'Ringan' }}</strong></p>
-                            </div>
+                            <p>Jumlah Ringan = <strong>{{ session()->get('jml_r') }}</strong></p>
+                            <p>Jumlah Berat = <strong>{{ session()->get('jml_b') }}</strong></p>
+                            <p>Jumlah K = <strong>{{ session()->get('jml_k') }}</strong></p>
+                            <p class="mb-2">Hasil prediksi anda adalah <strong>{{ session()->get('jml_r')<session()->get('jml_b')?'Berat':'Ringan' }}</strong></p>
+                        </div>
                         @endif
                         <h5 class="card-title">Lengkapi data anda</h5>
                         <p class="card-text">Kuesioner dibawah sesuai dengan petunjuk</p>
@@ -191,14 +191,14 @@
     $(document).ready(function() {
         $(".ps__rail-x").css("display", "none");
         $(".ps__rail-y").css("z-index", "1031");
-    
-        @if (session()->get('sts'))
-            swal.fire({
-                title: 'Sukses',
-                text: 'Hasil prediksi anda adalah {{ (session()->get('jml_r')>session()->get('jml_b')?"Ringan":"Berat") }}',
-                type: 'success',
-                showConfirmButton: true
-            });
+
+        @if(session()->get('sts'))
+        swal.fire({
+            title: 'Sukses',
+            text: 'Hasil prediksi anda adalah {{ (session()->get('jml_r') > session()->get('jml_b')?"Ringan":"Berat") }}',
+            type: 'success',
+            showConfirmButton: true
+        });
         @endif
     })
 </script>
