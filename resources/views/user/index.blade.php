@@ -25,7 +25,7 @@
                             <th>Nama</th>
                             <th>Email</th>
                             <th>Level</th>
-                            <th></th>
+                            {{-- <th></th> --}}
                         </tr>
                         </thead>
                         <tbody>
@@ -43,11 +43,11 @@
                                 <td>
                                     {{ $user->level==1?"Administrator":"Visitor" }}
                                 </td>
-                                <td>
+                                {{-- <td>
                                     <button name="editUser" class="btn btn-info editUser"role="button" data-href="{{ route('user.update',$user->id) }}" role="button" data-toggle="modal" data-id="{{ $idUser =$user->id }}"data-target="#modalAddUser"><i class="fas fa-pencil-alt"></i></button>
 
                                     <button name="hapusUser" class="btn btn-danger hapusUser" role="button" data-href="{{ route('user.destroy',$user->id) }}" role="button" data-toggle="modal" data-id="{{ $idUser =$user->id }}"data-target="#modalAddUser"><i class="fas fa-trash-alt"></i></button>
-                                </td>
+                                </td> --}}
                             </tr>
                             @endforeach
                         </tbody>
