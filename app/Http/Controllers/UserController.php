@@ -114,7 +114,9 @@ class UserController extends Controller
             $data['email'] = $request->input('email');
         }
         if ($request->input('password')!=null) {
-            $data['password'] = $request->input('password');
+            if($request->input('password')!='passwordtetep'){
+                $data['password'] = $request->input('password');
+            }
         }
         if ($request->input('level')!=null) {
             $data['level'] = $request->input('level');

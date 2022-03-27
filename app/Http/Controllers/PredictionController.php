@@ -111,7 +111,7 @@ class PredictionController extends Controller
         $db_dt_evals->jml_k = $jml_k;
         $db_dt_evals->save();
         // return $dist ;
-        return redirect('prediction')->with([
+        return redirect()->back()->with([
                             'sts'=>true,
                             'jml_r'=>$jml_r,
                             'jml_b'=>$jml_b,

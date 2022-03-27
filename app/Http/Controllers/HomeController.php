@@ -37,8 +37,8 @@ class HomeController extends Controller
     public function index()
     {
         if (Auth::user()->level == 1) {
-            $this->pred_controll->normalisasi($this->dt_evals->get(), $this->pred_dt->get());
-            $this->pred_controll->hitung(false, $this->dt_evals->get());
+            // $this->pred_controll->normalisasi($this->dt_evals->get(), $this->pred_dt->get());
+            // $this->pred_controll->hitung(false, $this->dt_evals->get());
             $data = $this->analytic_controll->createConfutionMatrix();
             $data['user'] = Auth::user();
             $data['pred_dt'] = $this->pred_dt->get();

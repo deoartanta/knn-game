@@ -117,6 +117,12 @@
                 <li class="nav-item">
                   <a href="{{ route('c-matrix') }}" class="nav-link @yield('c-matrix')">
                     <i class="far fa-circle nav-icon"></i>
+                    <p>Tambah Data</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{ route('c-matrix') }}" class="nav-link @yield('c-matrix')">
+                    <i class="far fa-circle nav-icon"></i>
                     <p>Confution Matrix</p>
                   </a>
                 </li>

@@ -27,7 +27,7 @@
                             <th>Level</th>
                             {{-- <th></th> --}}
                         </tr>
-                        </thead>
+                    </thead>
                         <tbody>
                             @foreach ($data as $user)
                             <tr>
