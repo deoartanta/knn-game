@@ -83,7 +83,7 @@ class analyticController extends Controller
 
         $spesi      =  ($rr /(($rr + $br)!=0?($rr + $br):1))*100;
         $spesi      = round($spesi,2);
-
+ 
         $auc        = (($recall+$spesi)/2);
         $auc        = round($auc,2);
         $data=[

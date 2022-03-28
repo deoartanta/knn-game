@@ -115,7 +115,7 @@
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="{{ route('c-matrix') }}" class="nav-link @yield('c-matrix')">
+                  <a href="{{ route('tambah') }}" class="nav-link @yield('tambah')">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Tambah Data</p>
                   </a>
@@ -234,6 +234,7 @@
   <script src="https://adminlte.io/themes/v3/dist/js/demo.js"></script>
   <script src="{{ asset('admin/plugins/datatables/jquery.dataTables.js') }}"></script>
   <script src="{{ asset('admin/plugins/datatables/dataTables.bootstrap4.js') }}"></script>
+  <script src="{{ asset('assets\sweet\sweetalert2.all.js')}}"></script>
   @yield('script')
   <script>
     $(function() {

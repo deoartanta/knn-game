@@ -9,6 +9,7 @@ use App\Models\Question;
 use App\Models\Normalisasi;
 use App\Http\Controllers\analyticController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PredictionController extends Controller
 {
@@ -53,17 +54,12 @@ class PredictionController extends Controller
         $i=0;
         $analyticControl = new analyticController;
         $db_dt_evals = new DtEvals;
+        $prediction = new Prediction;
+
         $dt_evals = $db_dt_evals->get();
         $no_data = ($dt_evals->count()+1);
 
-
         $jml_qu = Question::all()->count();
-        $prediction = new Prediction;
-
-        // $pred_dt = $this->normalisasi($dt_evals,$prediction->get());
-        // $dist = $this->hitung(false,$dt_evals);
-        // return $dist;
-        // die();
 
         $jmlD_ringan= $dt_evals->where('kelas','0')->count();
         $jmlD_berat= $dt_evals->where('kelas','1')->count();
@@ -86,7 +82,6 @@ class PredictionController extends Controller
             
             $i++;
         }
-        $prediction = new Prediction;
         $prediction->insert($keyall);
         $pred_dt = $this->normalisasi($dt_evals,$prediction->get());
         $dist = $this->hitung(true,$dt_evals);
@@ -105,28 +100,35 @@ class PredictionController extends Controller
             }
             $no++;
         }
-        // echo $jml_r<$jml_b?"Kelas Berat":"Kelas Ringan";
-        // echo '</br> Jumlah Ringan='.$jml_r.'</br> Jumlah Berat='.$jml_b;
         $db_dt_evals->kelas = $jml_r<$jml_b?1:0;
         $db_dt_evals->jml_k = $jml_k;
         $db_dt_evals->save();
-        // return $dist ;
+
         return redirect()->back()->with([
                             'sts'=>true,
                             'jml_r'=>$jml_r,
                             'jml_b'=>$jml_b,
                             'jml_k'=>$jml_k,
-                        ]);
+                     ]);
     }
     public function hitung($new_dt,$dt_evals){
         $return =null;
+        $data_all = Prediction::all();
+        $norm_all = Normalisasi::all();
+        $dt_eval_all = new DtEvals;
+        $dt_eval_add = [];
+        $dt_eval_all_arr = [];
+
+        $dist = new Distances;
         if ($new_dt){
             Distances::truncate();
             $dt_eval_last = $dt_evals->last();
+            $dist_add = [];
+            $dist_all_arr = [];
+            $i = 0;
             foreach ($dt_evals->where('no','<>',$dt_eval_last->no) as $ev) {
-                $data_new = Prediction::all()
-                        ->where('no_data',$dt_eval_last->no);
-                $data = Prediction::all()
+                $data_new=$data_all->where('no_data',$dt_eval_last->no);
+                $data = $data_all
                         ->where('no_data',$ev->no)
                         ->where('no_data','<>',$dt_eval_last->no);
                 $dt_hsl_jml = 0;
@@ -134,53 +136,45 @@ class PredictionController extends Controller
                     $dtNew_id = $data_new->where('qu_id',$val->qu_id)->first()
                             ->id;
                     $dtOld_id = $val->id;
-                    $dtNew_val = Normalisasi::all()
+                    $dtNew_val = $norm_all
                                 ->where('prediction_dt_id',$dtNew_id)
                                 ->first()->val_normalisasi;
-                    $dtOld_val = Normalisasi::all()
+                    $dtOld_val = $norm_all
                                 ->where('prediction_dt_id',$dtOld_id)
                                 ->first()->val_normalisasi;
                     $dt_hsl_kurang = $dtNew_val-$dtOld_val;
                     $dt_hsl_jml += pow($dt_hsl_kurang,2);
                 }
                 $dt_hsl_akar = sqrt($dt_hsl_jml);
-                $dist = new Distances;
-                $dist->no_data = $ev->no;
-                $dist->nilai = $dt_hsl_akar;
-                $dist->kelas = $ev->kelas;
-                $dist->save();
+                $dist_add['no_data']=$ev->no;
+                $dist_add['nilai']=$dt_hsl_akar;
+                $dist_add['kelas']=$ev->kelas;
+                $dist_all_arr[$i]=$dist_add;
+                $i++;
             }
+            $dist->insert($dist_all_arr);
             $return = Distances::orderBy('nilai', 'ASC')->get();
         }else{
-            $pred_dt = Prediction::all();
-            $normals_dt = Normalisasi::all();
             $hsl_hitung_dt=0;
+            $i = 1;
             foreach ($dt_evals as $key => $val_evals) {
-                // echo '</br> No Data = '.$val_evals->no.'</br>';
-            // foreach ($pred_dt->where('no_data',1) as $key => $val_pred) {
-                // $hsl_hitung_dt=0;
-                // echo '<================Start Data ('.$val_evals->no.')=============></br>';
                 Distances::truncate();
+                $i1 = 0;
                 foreach ($dt_evals as $key => $val_evals2) {
-                    // echo '==>Normalisasi Data '.$val_evals2->no.'</br>';
                         $hsl_hitung_dt = 0;
-                        foreach ($pred_dt->where('no_data',$val_evals2->no) as $key => $val_pred2) {
-                            // $hsl_hitung_dt=0;
-                            $normalisasi = $normals_dt->where('prediction_dt_id',$val_pred2->id)->first();
-                            $pred_data = $pred_dt->where('no_data',$val_evals->no)->where('qu_id',$val_pred2->qu_id)->first();
+                        foreach ($data_all->where('no_data',$val_evals2->no) as $key => $val_pred2) {
+                            $normalisasi = $norm_all->where('prediction_dt_id',$val_pred2->id)->first();
+                            $pred_data = $data_all->where('no_data',$val_evals->no)->where('qu_id',$val_pred2->qu_id)->first();
                             $hsl_hitung_dt +=pow($normalisasi->val_normalisasi-$pred_data->value,2);
-
-                            // echo '===>>D'.$val_pred2->no_data.'Qn'.$val_pred2->qu_id.' - D'.$pred_data->no_data.'Q'.$pred_data->qu_id.'</br>';
                         }
                         $dt_hsl_akar = sqrt($hsl_hitung_dt);
-                        // echo 'Hasil Hitung=>'.$hsl_hitung_dt.'</br>';
-                        // echo 'Hasil Hitung Akar=>'.$dt_hsl_akar.'</br>';
-                        $dist = new Distances;
-                        $dist->no_data = $val_evals2->no;
-                        $dist->nilai = $dt_hsl_akar;
-                        $dist->kelas = $val_evals2->kelas;
-                        $dist->save();
+                        $dist_add['no_data']=$val_evals2->no;
+                        $dist_add['nilai']=$dt_hsl_akar;
+                        $dist_add['kelas']=$val_evals2->kelas;
+                        $dist_all_arr[$i1]=$dist_add;
+                        $i1++;
                     }
+                    $dist->insert($dist_all_arr);
                     $no = 0;
                     $jml_r = 0;
                     $jml_b = 0;
@@ -193,23 +187,16 @@ class PredictionController extends Controller
                                 $jml_b++;
                             }
                             $total +=$val_dist->kelas;
-                            // echo "</br>total + ".$val_dist->kelas."=>".$total."</br>";
-                            // echo "</br>jumlah K =>".$val_evals2->jml_k."</br>";
-                        
                         }
                         $no++;
                     }
-                    // echo '</br> Jumlah Ringan='.$jml_r.'</br> Jumlah Berat='.$jml_b;
-                    // $hsl_akhir = $total/$val_evals->jml_k;
                     $kelas = $jml_r>$jml_b?0:1;
-                    $update_DtEvals = DtEvals::find($val_evals->id);
-                    $update_DtEvals->kelas_prediksi = $kelas;
-                    $update_DtEvals->save();
-                    // echo "Hasil Akhir==>".$hsl_akhir."</br> Kelas =>".$kelas."</br>";
+                    $dt_eval_add['kelas_prediksi'] = $kelas;
+                    $dt_eval_all_arr[$i++] = $dt_eval_add;
                 }
-                // echo '</br>Hasil Perhitungan => '.$hsl_hitung_dt;
-                // echo '</br>Akar Perhitungan => '.sqrt($hsl_hitung_dt);
-            // }
+                foreach ($dt_eval_all_arr as $key => $value) {
+                    $dt_eval_all = DtEvals::find($key)->update($value);
+                }
             $return = Distances::orderBy('nilai', 'ASC')->get();
 
         }
@@ -218,36 +205,22 @@ class PredictionController extends Controller
     public function  normalisasi($dt_evals,$prediction){
         Normalisasi::truncate();
         $jml_dt = 0;
-        // $jml_dt1 = 0;
+        $norm_add = [];
+        $norm_all_arr = [];
+        $nor = new Normalisasi;
         foreach ($prediction as $key => $val) {
             $pred_max = $prediction->where('qu_id',$val->qu_id)->max('value');
             $pred_min = $prediction->where('qu_id',$val->qu_id)->min('value');
-            // echo "ID =>".$val->qu_id."</br>";
-            // echo "Max =>".$pred_max."</br>";
-            // echo "Min =>".$pred_min."</br>";
+            
             $jml_dt1 = 0;
-            // if($pred_max>2){
-                // echo "(".$val->value."-".$pred_min.")/(".$pred_max."-".$pred_min.")";
-                // echo " = ".($val->value-$pred_min)/($pred_max-$pred_min)."</br>";
-                $value = ($val->value-$pred_min)/($pred_max-$pred_min);
-            // }else{
-            //     if($val->value ==1 ){
-            //         // echo "Value ".$val->value." = 0</br>";
-            //         $value = 0;
-            //     }else{
-            //         // echo "Value ".$val->value." = 1</br>";
-            //         $value = 1;
-            //     }
-            // }
-            $nor = new Normalisasi;
-            $nor->prediction_dt_id = $val->id;
-            $nor->val_normalisasi = $value;
-            $nor->save();
+            $value = ($val->value-$pred_min)>0?($val->value-$pred_min)/($pred_max-$pred_min):0;;
+            $norm_add['prediction_dt_id'] =$val->id;
+            $norm_add['val_normalisasi'] =$value;
+            $norm_all_arr[$jml_dt]= $norm_add;
             $jml_dt1++;
-            // echo "</br>";
             $jml_dt++;
         }
-        // echo $prediction->;
+        $nor->insert($norm_all_arr);
         return Prediction::all();
     }
 
