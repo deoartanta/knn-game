@@ -27,6 +27,7 @@
   <link rel="stylesheet" href="{{ asset('admin/plugins/summernote/summernote-bs4.css') }}">
   <link rel="stylesheet" href="{{ asset('admin/plugins/datatables/dataTables.bootstrap4.css') }}">
   <!-- Google Font: Source Sans Pro -->
+<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
   <style>
     *::-webkit-scrollbar {
@@ -43,6 +44,7 @@
       border: 0px;
     }
   </style>
+  @yield('style')
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -198,6 +200,7 @@
 
   <!-- jQuery -->
   <script src="{{ asset('admin/plugins/jquery/jquery.min.js') }}"></script>
+  <script src="{{ asset('assets\jq-ajax-progress\src\jq-ajax-progress.js') }}"></script>
   <!-- jQuery UI 1.11.4 -->
   <script src="{{ asset('admin/plugins/jquery-ui/jquery-ui.min.js') }}"></script>
   <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
@@ -231,7 +234,7 @@
   <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
   <script src="{{ asset('admin/dist/js/pages/dashboard.js') }}"></script>
   <!-- AdminLTE for demo purposes -->
-  <script src="https://adminlte.io/themes/v3/dist/js/demo.js"></script>
+  {{-- <script src="https://adminlte.io/themes/v3/dist/js/demo.js"></script> --}}
   <script src="{{ asset('admin/plugins/datatables/jquery.dataTables.js') }}"></script>
   <script src="{{ asset('admin/plugins/datatables/dataTables.bootstrap4.js') }}"></script>
   <script src="{{ asset('assets\sweet\sweetalert2.all.js')}}"></script>

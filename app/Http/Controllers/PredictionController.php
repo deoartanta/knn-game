@@ -120,7 +120,7 @@ class PredictionController extends Controller
         $dt_eval_all_arr = [];
 
         $dist = new Distances;
-        if ($new_dt){
+        if ($new_dt==true){
             Distances::truncate();
             $dt_eval_last = $dt_evals->last();
             $dist_add = [];
@@ -195,7 +195,7 @@ class PredictionController extends Controller
                     $dt_eval_all_arr[$i++] = $dt_eval_add;
                 }
                 foreach ($dt_eval_all_arr as $key => $value) {
-                    $dt_eval_all = DtEvals::find($key)->update($value);
+                    $dt_eval_all->where('id',$key)->update($value);
                 }
             $return = Distances::orderBy('nilai', 'ASC')->get();
 

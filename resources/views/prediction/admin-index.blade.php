@@ -237,12 +237,12 @@
         });
         @endif
         @if(session()->get('stsImport'))
-        swal.fire({
-            title: 'Selamat',
-            text: 'Data berhasil diimport',
-            type: 'success',
-            showConfirmButton: true
-        });
+            swal.fire({
+                title: 'Selamat',
+                text: 'Data berhasil diimport',
+                type: 'success',
+                showConfirmButton: true
+            });
         @endif
     })
 </script>

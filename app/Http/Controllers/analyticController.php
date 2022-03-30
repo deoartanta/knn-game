@@ -20,17 +20,19 @@ class analyticController extends Controller
     {
         $dtEvals = DtEvals::all();
         $pred_controll = new PredictionController;
-        $pred_controll->normalisasi($dtEvals,Prediction::all());
-        $pred_controll->hitung(false,$dtEvals);
+        // $pred_controll->normalisasi($dtEvals,Prediction::all());
+        // $pred_controll->hitung(false,$dtEvals);
         $data = $this->createConfutionMatrix();
         $data['data']=$dtEvals;
         return (view()->exists('prediction.matrix'))?view('prediction.matrix',$data):'';
     }
     public function evalDTPage(){
-        $data['data_eval']=DtEvals::all();
-        $data['data_pred']=Prediction::all();
+        $data['data_eval']=[];
+        $data['data_pred']=Prediction::leftJoin('dt_evals','dt_evals.no','=','pred_datas.no_data')
+                            ->select('dt_evals.*','pred_datas.*')->get();
+                            // dd($data['data_pred']->first());
         $data['question']=Question::all();
-        $data['n_data']=Normalisasi::all();
+        // $data['n_data']=Normalisasi::all();
         return (view()->exists('prediction.eval-data'))?view('prediction.eval-data',$data):'';
     }
     public function normalizeDTPage(){

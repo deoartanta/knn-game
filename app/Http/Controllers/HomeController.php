@@ -41,8 +41,8 @@ class HomeController extends Controller
     public function index()
     {
         if (Auth::user()->level == 1) {
-            $this->pred_controll->normalisasi($this->dt_evals->get(), $this->pred_dt->get());
-            $this->pred_controll->hitung(false, $this->dt_evals->get());
+            // $this->pred_controll->normalisasi($this->dt_evals->get(), $this->pred_dt->get());
+            // $this->pred_controll->hitung(false, $this->dt_evals->get());
             $data = $this->analytic_controll->createConfutionMatrix();
             $data['user'] = Auth::user();
             $data['pred_dt'] = $this->pred_dt->get();
@@ -61,6 +61,32 @@ class HomeController extends Controller
     public function normalizeData()
     {
         return $this->analytic_controll->normalizeDTPage();
+    }
+    public function analisData(Request $req){
+        $data = [];
+        switch ($req->input('aksi')) {
+            case 'n-data':
+                
+                $this->pred_controll->normalisasi($this->dt_evals->get(), $this->pred_dt->get());
+
+                $data['sts'] = true;
+                $data['msg'] = "Normalisasi sukses";
+
+                break;
+                
+            case 'h-data':        
+                $dt_bru = $req->input('dt_bru')=='false'?false:true;
+                $this->pred_controll->hitung($dt_bru, $this->dt_evals->get());
+                $data['sts'] = true;
+                $data['msg'] = "Perhitungan berhasil";
+                break;
+
+            default:
+                $data['sts'] = false;
+                $data['msg'] = "Tidak ada aksi";
+                break;
+        }
+        return json_encode($data);
     }
 
     public function evalData()
