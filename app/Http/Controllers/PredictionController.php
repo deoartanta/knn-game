@@ -23,9 +23,10 @@ class PredictionController extends Controller
         $db_dt_evals = new DtEvals;
         $prediction = new Prediction;
         $dt_evals = $db_dt_evals->get();
+        $data['jmlDt'] = $prediction->get()->count();
         // return $this->hitung(90);
         // return $dt_evals;
-       return ((view()->exists('prediction.index'))?view('prediction.index'):'');
+       return ((view()->exists('prediction.index'))?view('prediction.index',$data):'');
     }
 
     /**

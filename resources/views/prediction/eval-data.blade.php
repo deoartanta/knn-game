@@ -136,8 +136,10 @@
         var i =1;
         var dt_end =$('.kelas-prediksi').length;
         var i_cek = 0;
-        $('#pageLoading').addClass("show");
-        $('#pageLoading').show();
+        if (dt_end!=0){
+            $('#pageLoading').addClass("show");
+            $('#pageLoading').show();
+        }
         $('.kelas-prediksi').each(function(){
                 setTimeout(() => {
                     {{--

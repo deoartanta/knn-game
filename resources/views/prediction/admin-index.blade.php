@@ -119,7 +119,7 @@
                                                 </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                 <label class="form-check-label">
                                                     <input name="5" value="2" type="radio" class="form-check-input" required="">Iya
-                                                </label>>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                 <label class="form-check-label">
                                                     <input name="5" value="3" type="radio" class="form-check-input" required="">Kadang-kadang
                                                 </label>
@@ -206,7 +206,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{ route('import') }}" method="post" enctype="multipart/form-data">
+            <form action="{{ route('import') }}" id="form-import" method="post" enctype="multipart/form-data">
                 @csrf
             <div class="modal-body bg-light">
                 <div class="form-group">
@@ -216,7 +216,7 @@
                 </div>
             </div>
             <div class="modal-footer bg-light">
-                <button type="submit" class="btn btn-success">Submit</button>
+                <button id="btn-import" type="submit" class="btn btn-success">Submit</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
             </div>
             </form>
@@ -228,6 +228,9 @@
 @section('script')
 <script>
     $(document).ready(function() {
+        $('#form-import').submit(function(e){
+            $('#btn-import').attr('disabled',true);
+        });
         @if(session()->get('sts'))
         swal.fire({
             title: 'Sukses',

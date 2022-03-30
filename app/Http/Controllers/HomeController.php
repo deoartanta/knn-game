@@ -106,10 +106,13 @@ class HomeController extends Controller
     }
     public function importData(Request $request)
     {
+        importData::truncate();
         // validasi
-		// $this->validate($request, [
-		// 	'file' => 'required|mimes:csv,xls,xlsx'
-		// ]);
+		// $valid = $this->validate($request, [
+        //     'file' => 'required|mimes:csv,xls,xlsx'
+        // ]);
+        // dd($valid);
+        // die();
  
 		// menangkap file excel
 		$file = $request->file('import-data');
@@ -134,6 +137,7 @@ class HomeController extends Controller
             $return['stsImport'] = false;
         }
         // return importData::all();
+        
         return redirect()->route('tambah')->with($return);
     }
     function importDtToDb(){

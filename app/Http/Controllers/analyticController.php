@@ -46,7 +46,7 @@ class analyticController extends Controller
     }
     public function createConfutionMatrix(){
         $dtEvals = DtEvals::all();        
-        $bb=0;$br=0;$rb=0;$rr=0;$kk=0;$jml_k = $dtEvals->first()->jml_k;
+        $bb=0;$br=0;$rb=0;$rr=0;$kk=0;$jml_k = $dtEvals->count()>0?$dtEvals->first()->jml_k:0;
         foreach ($dtEvals as $key => $val) {
             if($val->kelas==$val->kelas_prediksi){
                 if($val->kelas==0){
@@ -64,30 +64,57 @@ class analyticController extends Controller
                 }
             }
         }
-        $berat = $bb+$rr;
-        $tidak_Berat = $br+$rb+$kk;
-        $jumlah_uji = $dtEvals->count();
+        if ($dtEvals->count()>0) {
+            $berat = $bb+$rr;
+            $tidak_Berat = $br+$rb+$kk;
+            $jumlah_uji = $dtEvals->count();
 
-        $F_Rate     = ($tidak_Berat/$jumlah_uji)*100;
-        $F_Rate     = round($F_Rate,2);
+            $F_Rate = ($tidak_Berat/$jumlah_uji==0?1:$jumlah_uji)*100;
+            $F_Rate     = round($F_Rate,2);
 
-        $akurasi    = ($berat/$jumlah_uji)*100;
-        $akurasi    = round($akurasi,2);
+            $akurasi    = ($berat/$jumlah_uji)*100;
+            $akurasi    = round($akurasi,2);
 
-        $presisi    = ($bb/(($bb + $br)!=0?($bb + $br):1))*100;
-        $presisi    = round($presisi,2);
+            $presisi    = ($bb/(($bb + $br)!=0?($bb + $br):1))*100;
+            $presisi    = round($presisi,2);
 
-        $recall     = ($bb/(($bb + $rb)!=0?($bb + $rb):1))*100;
-        $recall     = round($recall);
+            $recall     = ($bb/(($bb + $rb)!=0?($bb + $rb):1))*100;
+            $recall     = round($recall);
 
-        $F1_score   = 2*($presisi*$recall)/(($presisi+$recall)!=0?($presisi+$recall):1);
-        $F1_score   = round($F1_score,2);
+            $F1_score   = 2*($presisi*$recall)/(($presisi+$recall)!=0?($presisi+$recall):1);
+            $F1_score   = round($F1_score,2);
 
-        $spesi      =  ($rr /(($rr + $br)!=0?($rr + $br):1))*100;
-        $spesi      = round($spesi,2);
- 
-        $auc        = (($recall+$spesi)/2);
-        $auc        = round($auc,2);
+            $spesi      =  ($rr /(($rr + $br)!=0?($rr + $br):1))*100;
+            $spesi      = round($spesi,2);
+    
+            $auc        = (($recall+$spesi)/2);
+            $auc        = round($auc,2);
+        }else{
+            $berat = $bb+$rr;
+            $tidak_Berat = $br+$rb+$kk;
+            $jumlah_uji = $dtEvals->count();
+
+            $F_Rate = 0;
+            $F_Rate = round($F_Rate,2);
+
+            $akurasi = 0;
+            $akurasi = round($akurasi,2);
+
+            $presisi = 0;
+            $presisi = round($presisi,2);
+
+            $recall = 0;
+            $recall = round($recall);
+
+            $F1_score = 0;
+            $F1_score = round($F1_score,2);
+
+            $spesi = 0;
+            $spesi = round($spesi,2);
+
+            $auc = 0;
+            $auc = round($auc,2);
+        }
         $data=[
             'bb'=>$bb,
             'br'=>$br,
