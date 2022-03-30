@@ -16,12 +16,12 @@
 
 <section class="container">
     <div class="container-fluid">
-        <div class="card card-outline card-primary ">
+        <div class="card card-outline card-primary collapsed-card">
             <div class="card-header">
                 <h3 class="card-title">Keterangan</h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                        <i class="fas fa-minus"></i>
+                        <i class="fas fa-plus"></i>
                     </button>
                 </div>
             </div>

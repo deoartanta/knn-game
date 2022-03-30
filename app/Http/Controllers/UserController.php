@@ -13,6 +13,36 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    public function cekEmail(){
+        $msg = "";
+        $sts = false;
+        if(isset($_POST['email'])){
+            $email =$_POST['email'];
+            $sts = true;
+        }else{
+            $msg = "Internal Server Error";
+            $sts = false;
+        }
+        if($sts){
+            $user = User::all()->where('email',$email);
+            if ($user->count()>0) {
+                $sts=false;
+                $msg = 'Email already used, please create a new one';
+            }else{
+                $sts=true;
+                $msg = 'Looks good!';
+            }
+        }
+        $result = [
+            'sts'=>$sts,
+            'msg'=>$msg
+        ];
+        return json_encode($result);
+    }
     public function index()
     {
         $data['data'] = User::All();
@@ -77,7 +107,23 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        if ($request->input('nama')!=null) {
+            $data['name'] = $request->input('nama');
+        }
+        if ($request->input('email')!=null) {
+            $data['email'] = $request->input('email');
+        }
+        if ($request->input('password')!=null) {
+            if($request->input('password')!='passwordtetep'){
+                $data['password'] = $request->input('password');
+            }
+        }
+        if ($request->input('level')!=null) {
+            $data['level'] = $request->input('level');
+        }
+        $user = User::find($id);
+        $user->update($data);
+        return redirect()->back();
     }
 
     /**
@@ -88,6 +134,7 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        User::find($id)->delete();
+        return redirect()->back();
     }
 }
