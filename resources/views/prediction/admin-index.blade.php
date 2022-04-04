@@ -6,6 +6,8 @@
     }
 </style>
 @endsection
+@section('prediction','active')
+@section('mo-prediction','menu-open')
 @section('tambah','active')
 
 @section('content')
@@ -211,7 +213,7 @@
             <div class="modal-body bg-light">
                 <div class="form-group">
                   <input type="file"
-                    class="form-control pt-3 pb-5" name="import-data" id="import-data" aria-describedby="desInput" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"multiple>
+                    class="form-control pt-3 pb-5" name="import-data" id="import-data" aria-describedby="desInput" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"multiple required>
                   <small id="desInput" class="form-text text-muted">File excel yang diupload adalah format 97-2003 workbook (.xls) dan Microsoft Excel Worksheet(.xlsx)</small>
                 </div>
             </div>

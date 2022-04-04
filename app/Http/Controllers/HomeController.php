@@ -149,7 +149,8 @@ class HomeController extends Controller
         $pred_dtArr = [];
         $dt_evalsArr_all = [];
         $pred_dtArr_all = [];
-        $no = 0;
+        $no = ($dt_evals->count());
+        // dd($no);
         $no_qu = 0;
         foreach ($dtImport as $key => $val) {
             $dt_evalsArr['no'] = ($no+1);

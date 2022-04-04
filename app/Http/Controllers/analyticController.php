@@ -20,10 +20,9 @@ class analyticController extends Controller
     {
         $dtEvals = DtEvals::all();
         $pred_controll = new PredictionController;
-        // $pred_controll->normalisasi($dtEvals,Prediction::all());
-        // $pred_controll->hitung(false,$dtEvals);
         $data = $this->createConfutionMatrix();
         $data['data']=$dtEvals;
+        
         return (view()->exists('prediction.matrix'))?view('prediction.matrix',$data):'';
     }
     public function evalDTPage(){
@@ -36,31 +35,37 @@ class analyticController extends Controller
         return (view()->exists('prediction.eval-data'))?view('prediction.eval-data',$data):'';
     }
     public function normalizeDTPage(){
-        $pred_controll = new PredictionController;
-        $pred_controll->normalisasi(DtEvals::all(),Prediction::all());
-        $data['data_eval']=DtEvals::all();
-        $data['data_pred']=Prediction::all();
-        $data['question']=Question::all();
-        $data['n_data']=Normalisasi::all();
+        $dt_evals = new DtEvals;
+        $ques = new Question;
+        $norm =
+        Normalisasi::leftJoin('pred_datas','normalisasi.prediction_dt_id','=','pred_datas.id')->select('normalisasi.*','pred_datas.*')->get();
+        $data['data_eval']=$dt_evals->get();
+        $data['question']=$ques->get();
+        $data['n_data']=$norm;
+        $data['jml_dataBru']=$data['data_eval']->count()-($data['n_data']->count()/9);
         return (view()->exists('prediction.n-data'))?view('prediction.n-data',$data):'';
     }
     public function createConfutionMatrix(){
         $dtEvals = DtEvals::all();        
         $bb=0;$br=0;$rb=0;$rr=0;$kk=0;$jml_k = $dtEvals->count()>0?$dtEvals->first()->jml_k:0;
+        
         foreach ($dtEvals as $key => $val) {
             if($val->kelas==$val->kelas_prediksi){
-                if($val->kelas==0){
+                if($val->kelas_prediksi==null){
+                    $kk++;
+                }else if($val->kelas==0&&$val->kelas_prediksi==0){
                     $rr++;
-                }else if($val->kelas==1){
+                }else if($val->kelas==1&&$val->kelas_prediksi==1){
                     $bb++;
                 }
             }else{
-                if($val->kelas==0){
+                if($val->kelas==0&&$val->kelas_prediksi==1){
                     $rb++;
-                }else if($val->kelas==1){
-                    $br++;
                 }else if($val->kelas_prediksi==null){
                     $kk++;
+                }else if($val->kelas==1&&$val->kelas_prediksi==0){
+                    $br++;
+                    dd($val->kelas_prediksi);
                 }
             }
         }
@@ -69,7 +74,7 @@ class analyticController extends Controller
             $tidak_Berat = $br+$rb+$kk;
             $jumlah_uji = $dtEvals->count();
 
-            $F_Rate = ($tidak_Berat/$jumlah_uji==0?1:$jumlah_uji)*100;
+            $F_Rate = ($tidak_Berat/($jumlah_uji==0?1:$jumlah_uji))*100;
             $F_Rate     = round($F_Rate,2);
 
             $akurasi    = ($berat/$jumlah_uji)*100;
@@ -126,7 +131,8 @@ class analyticController extends Controller
             'recall'=>$recall,
             'F1_score'=>$F1_score,
             'spesi'=>$spesi,
-            'auc'=>$auc
+            'auc'=>$auc,
+            'kk'=>$kk
         ];
         return $data;
     }

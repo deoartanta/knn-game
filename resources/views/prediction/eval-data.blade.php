@@ -34,7 +34,13 @@
     <div class="row mb-2">
       <div class="col-sm-6">
         <h1 class="m-0 text-dark">Evaluation Data</h1>
-      </div>
+    </div>
+    <div id="alertHitung" class="col-sm-12 alert alert-danger  alert-dismissible fade" role="alert">
+        {{-- <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button> --}}
+        <p class="mb-2" id="alerMsg">Mohon maaf saat ini system belum bisa melakukan <strong>Prediksi</strong>, silahkan menghubungi administrator!!</p>
+    </div>
     </div>
   </div>
 </div>
@@ -98,7 +104,7 @@
                                     @php
                                          $i++;
                                     @endphp
-                                    @if ($i>=9)
+                                    @if ($i>8)
                                         <td scope="row">{{ ($val->kelas==0)?"Ringan":(($val->kelas==1)?"Berat":"Belum Diprediksi") }}</td>
                                         <td scope="row" class="kelas-prediksi">{{ 
                                         ($val->kelas_prediksi!=null)?(($val->kelas_prediksi=0)?"Ringan":"Berat"):"Belum Diprediksi"
@@ -133,9 +139,10 @@
 @section('script')
 <script>
     $(document).ready(function(){
-        var i =1;
+        var i =0;
         var dt_end =$('.kelas-prediksi').length;
         var i_cek = 0;
+        $('#alertHitung').hide();
         if (dt_end!=0){
             $('#pageLoading').addClass("show");
             $('#pageLoading').show();
@@ -149,11 +156,10 @@
                     --}}
                     var kls_prediksi = $(this).text();
                     i++;
-                    if(kls_prediksi!='Ringan'){
-                        if(kls_prediksi!='Berat'){
-                            i_cek++;
-                        }
+                    if(kls_prediksi=='Belum Diprediksi'){
+                        i_cek++;
                     }
+
                     if(i==dt_end){
                         // $('.spinner-grow').addClass('d-none');
                         if (i_cek>0) {
@@ -175,7 +181,17 @@
                                     // $('.progress').fadeOut();
                                     $('#pageLoading').removeClass("show");
                                     $('#pageLoading').hide();
+                                    $('#alertHitung').show();
+                                    $('#alertHitung').addClass('show');
+                                    $('#alerMsg').html('<strong>'+i_cek+' data kelas prediksi</strong> belum dihitung, <button class="btn-hitung-now btn btn-sm btn-primary" role="button">Mulai hitung</button> sekarang?');
                                 }
+                                $('.btn-hitung-now').click(function() {
+                                    $('#analis-data [name=aksi]').val('n-data');
+                                    $('#analis-data').submit();
+                                    $('#pageLoading').removeClass("show");
+                                    $('#pageLoading').hide();
+                                    $(this).attr('disabled','true');
+                                });
                             });
                         }else{
                             $('#pageLoading').hide();
@@ -199,7 +215,6 @@
             $('#pageLoading').addClass("show");
             $('#pageLoading').show();
             var formData = _this.serialize();
-            console.log(formData);
             $.ajax({
                 type: "POST",
                 url: "{{ route('n-data-analis') }}",
@@ -265,9 +280,7 @@
                             type: 'success',
                             showConfirmButton: true
                         }).then((result)=>{
-                            if(result.value){
-                                location.reload();
-                            }
+                            location.reload();
                         });
                     }else{
                         swal.fire({
