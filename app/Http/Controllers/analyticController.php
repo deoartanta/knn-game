@@ -26,7 +26,7 @@ class analyticController extends Controller
         return (view()->exists('prediction.matrix'))?view('prediction.matrix',$data):'';
     }
     public function evalDTPage(){
-        $data['data_eval']=[];
+        $data['data_eval']=DtEvals::all();
         $data['data_pred']=Prediction::leftJoin('dt_evals','dt_evals.no','=','pred_datas.no_data')
                             ->select('dt_evals.*','pred_datas.*')->get();
                             // dd($data['data_pred']->first());
@@ -43,6 +43,8 @@ class analyticController extends Controller
         $data['question']=$ques->get();
         $data['n_data']=$norm;
         $data['jml_dataBru']=$data['data_eval']->count()-($data['n_data']->count()/9);
+        $data['jmlDt'] = $dt_evals->count();
+        
         return (view()->exists('prediction.n-data'))?view('prediction.n-data',$data):'';
     }
     public function createConfutionMatrix(){
@@ -51,7 +53,7 @@ class analyticController extends Controller
         
         foreach ($dtEvals as $key => $val) {
             if($val->kelas==$val->kelas_prediksi){
-                if($val->kelas_prediksi==null){
+                if($val->kelas_prediksi===null){
                     $kk++;
                 }else if($val->kelas==0&&$val->kelas_prediksi==0){
                     $rr++;
@@ -61,11 +63,11 @@ class analyticController extends Controller
             }else{
                 if($val->kelas==0&&$val->kelas_prediksi==1){
                     $rb++;
-                }else if($val->kelas_prediksi==null){
+                }else if($val->kelas_prediksi===null){
                     $kk++;
                 }else if($val->kelas==1&&$val->kelas_prediksi==0){
                     $br++;
-                    dd($val->kelas_prediksi);
+                    // dd($val->kelas_prediksi);
                 }
             }
         }

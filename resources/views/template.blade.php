@@ -101,7 +101,7 @@
 									</form>
 									<a name="profile" id="profile" class="btn btn-outline-success btn-sm float-right" href="#home" role="button">Profile</a>
 									@if (Auth::user()->level==1)
-									<a class="btn btn-outline-primary btn-sm float-right mr-2" href="{{ route('home') }}">Admin</a>
+									<a class="btn btn-outline-primary btn-sm float-right mr-2" href="{{ route('home.admin') }}">Admin</a>
 									@endif
 								</div>
 							</div>

@@ -151,7 +151,7 @@
               </a>
             </li>
             <li class="nav-item mt-3">
-              <a href="{{ url('/') }}" class="nav-link">
+              <a href="{{ route('home.guest') }}" class="nav-link">
                 <i class="nav-icon fas fa-home"></i>
                 <p>
                   BACK TO HOMEPAGE

@@ -35,14 +35,23 @@
       <div class="col-sm-6">
         <h1 class="m-0 text-dark">Normalize Data</h1>
       </div>
-      @if($jml_dataBru>0)
-      <div id="alertHitung" class="col-sm-12 alert alert-danger  alert-dismissible fade show" role="alert">
-        {{-- <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button> --}}
-        <p class="mb-2" id="alerMsg"><strong>{{ $jml_dataBru }} data baru</strong> belum dinormalisasi, <button class="btn-hitung-now btn btn-sm btn-primary" role="button">Normalisasikan</button> sekarang!!</p>
-    </div>
-    @endif
+      @if($jmlDt==0)
+        <div class="alert alert-danger  alert-dismissible fade show w-100" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <p class="mb-2">Tidak Ada Data</p>
+        </div>
+        @else
+            @if($jml_dataBru>0)
+                <div id="alertHitung" class="col-sm-12 alert alert-danger  alert-dismissible fade show" role="alert">
+                {{-- <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button> --}}
+                <p class="mb-2" id="alerMsg"><strong>{{ $jml_dataBru }} data baru</strong> belum dinormalisasi, <button class="btn-hitung-now btn btn-sm btn-primary" role="button">Normalisasikan</button> sekarang!!</p>
+                </div>
+            @endif
+        @endif
     </div>
   </div>
 </div>
@@ -84,33 +93,35 @@
                         </tr>
                         </thead>
                         <tbody>
-                            @if ($n_data->count()!=0)
-                                @php
-                                    $no_data = 0;
-                                    $jml_val = 0;
-                                    $i = 0;
-                                @endphp
-                                @foreach ($n_data as $val) 
-                                    @if ($no_data!=$val->no_data)
-                                        <tr>
-                                            <td scope="row">{{ $val->no_data }}</td>
-                                        @php
-                                            $no_data = $val->no_data;
-                                            $jml_val = $i;
-                                        @endphp
-                                    @endif
-                                        <td>{{ $val->val_normalisasi*1}}</td>
+                            @if($jmlDt!=0)
+                                @if ($n_data->count()!=0)
                                     @php
-                                         $i++;
+                                        $no_data = 0;
+                                        $jml_val = 0;
+                                        $i = 0;
                                     @endphp
-                                    @if ($i>8)
-                                        
-                                    </tr>
+                                    @foreach ($n_data as $val) 
+                                        @if ($no_data!=$val->no_data)
+                                            <tr>
+                                                <td scope="row">{{ $val->no_data }}</td>
+                                            @php
+                                                $no_data = $val->no_data;
+                                                $jml_val = $i;
+                                            @endphp
+                                        @endif
+                                            <td>{{ $val->val_normalisasi*1}}</td>
                                         @php
-                                            $i=0;
+                                            $i++;
                                         @endphp
-                                    @endif
-                                @endforeach
+                                        @if ($i>8)
+                                            
+                                        </tr>
+                                            @php
+                                                $i=0;
+                                            @endphp
+                                        @endif
+                                    @endforeach
+                                @endif
                             @endif
                         </tbody>
                 </table>

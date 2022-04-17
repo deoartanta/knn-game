@@ -56,7 +56,7 @@
                             {{-- Question --}}
                             @if($jmlDt!=0)
                                 <h5 class="card-title">(*) Wajib Diisi</h5>
-                                <form method="POST" action="{{ route('prediction.store') }}" enctype="multipart/form-data">
+                                <form method="POST" id="addP" action="{{ route('prediction.store') }}" enctype="multipart/form-data">
                                     <div class="position-relative row form-group">
                                         <label for="radio2" class="col-sm-6 col-form-label">Bermain Game Setiap Hari (*)</label>
                                         <div class="col-sm-6">
@@ -232,6 +232,9 @@
     $(document).ready(function() {
         $('#form-import').submit(function(e){
             $('#btn-import').attr('disabled',true);
+        });
+        $('#addP').submit(function(e){
+            $('#addP button[type=submit]').attr('disabled',true);
         });
         @if(session()->get('sts'))
         swal.fire({

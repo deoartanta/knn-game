@@ -73,6 +73,10 @@
             <div class="card-body">
                 <h5 class="card-title">Evaluation Data 
                 </h5>
+                <div class="progress m-1 bg-secondary" id="progress">
+                    <div class="progress-bar bg-primary" role="progressbar" style="width: 100%;"
+                        aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">100%</div>
+                </div>
                 <table class="table table-search table-striped table-inverse">
                     <thead class="thead-inverse">
                         <tr>
@@ -107,7 +111,7 @@
                                     @if ($i>8)
                                         <td scope="row">{{ ($val->kelas==0)?"Ringan":(($val->kelas==1)?"Berat":"Belum Diprediksi") }}</td>
                                         <td scope="row" class="kelas-prediksi">{{ 
-                                        ($val->kelas_prediksi!=null)?(($val->kelas_prediksi=0)?"Ringan":"Berat"):"Belum Diprediksi"
+                                        ($val->kelas_prediksi!==null)?(($val->kelas_prediksi==0)?"Ringan":"Berat"):"Belum Diprediksi"
                                         }}</td>
                                     </tr>
                                         @php
@@ -142,7 +146,9 @@
         var i =0;
         var dt_end =$('.kelas-prediksi').length;
         var i_cek = 0;
+        var progress = 0;
         $('#alertHitung').hide();
+        $('#progress').hide();
         if (dt_end!=0){
             $('#pageLoading').addClass("show");
             $('#pageLoading').show();
@@ -174,8 +180,6 @@
                                 if(result.value){
                                     $('#analis-data [name=aksi]').val('n-data');
                                     $('#analis-data').submit();
-                                    $('#pageLoading').removeClass("show");
-                                    $('#pageLoading').hide();
                                 }else{
                                     // $('.bedge-loading').fadeOut();
                                     // $('.progress').fadeOut();
@@ -185,13 +189,7 @@
                                     $('#alertHitung').addClass('show');
                                     $('#alerMsg').html('<strong>'+i_cek+' data kelas prediksi</strong> belum dihitung, <button class="btn-hitung-now btn btn-sm btn-primary" role="button">Mulai hitung</button> sekarang?');
                                 }
-                                $('.btn-hitung-now').click(function() {
-                                    $('#analis-data [name=aksi]').val('n-data');
-                                    $('#analis-data').submit();
-                                    $('#pageLoading').removeClass("show");
-                                    $('#pageLoading').hide();
-                                    $(this).attr('disabled','true');
-                                });
+                                btnClick();
                             });
                         }else{
                             $('#pageLoading').hide();
@@ -200,15 +198,24 @@
                     }
                 }, 100);
         })
+        function btnClick(){
+            $('.btn-hitung-now').click(function() {
+                $('#pageLoading').addClass("show");
+                $('#pageLoading').show();
+                $('#analis-data [name=aksi]').val('n-data');
+                $('#analis-data').submit();
+                $(this).attr('disabled','true');
+            });
+        }
         $('#analis-data').submit(function(e){
             e.preventDefault();
-            console.log($(this).serialize);
             n_data($(this));
         });
         function n_data(_this){
+            $('#progress').show();
+            $('.progress-bar').css('width',"0%");
+            $('.progress-bar').text('Normalisasi 0 %');
             {{-- 
-                $('.progress-bar').css('width',"0%");
-                $('.progress-bar').text('0%');
                 $('.bedge-loading').show();
                 $('.progress').show();
             --}}
@@ -236,127 +243,124 @@
                         $('#pageLoading').hide();
                     }else{
                         $('#analis-data [name=aksi]').val('h-data');
-                        h_data(_this);
+                        var jml_dt = '{{ $data_eval->count() }}';
+                        var presentase = 1/(parseInt(jml_dt)+1)*100;
+                        $('.progress-bar').css('width',presentase+"%");
+                        $('.progress-bar').text('Normalisasi '+presentase.toFixed(1)+'%');
+                        $('#pageLoading').addClass("show");
+                        $('#pageLoading').hide();
+                        h_data(1);
                     }
                 },
                 error: function (data) {
                     $('#pageLoading').removeClass("show");
                     $('#pageLoading').hide();
+                    $('#progress').hide();
                     swal.fire({
                             title: 'Error',
                             text: data.responseJSON.message,
                             type: 'error',
                             showConfirmButton: true
-                        });
-                    console.log(data);
+                    });
+                    $('#alertHitung').show();
+                    $('#alertHitung').addClass('show');
+                    $('#alerMsg').html('<strong>'+i_cek+' data kelas prediksi</strong> belum dihitung, <button class="btn-hitung-now btn btn-sm btn-primary" role="button">Mulai hitung</button> sekarang?');
+                    btnClick();
+                    // $('.btn-hitung-now').removeAttr('disabled');
                 },
             });
         }
-        function h_data(_this){
+        function h_data(no_data_next){
             {{-- 
                 $('.bedge-loading').show();
                 $('.progress').show();
                 $('.progress-bar').css('width',"0%");
                 $('.progress-bar').text('0%');
             --}}
-            $('#pageLoading').addClass("show");
-            $('#pageLoading').show();
-            var formData = $('#analis-data').serialize();
+            var jml_dt = '{{ $data_eval->count() }}';
             $.ajax({
                 type: "POST",
-                url: "{{ route('n-data-analis') }}",
+                url: "{{ route('n-data-analis') }}/"+no_data_next,
                 dataType: 'json',
                 cache: false,
                 data:{
                     "_token": "{{ csrf_token() }}",
                     "aksi": "h-data",
-                    "dt_bru":false
-                    },
+                    "dt_bru":false,
+                    "type": "one"
+                },
                 success: function (data) {
-                    if(data.sts){
-                        swal.fire({
-                            title: 'Selamat',
-                            text: 'Perhitungan berhasil',
-                            type: 'success',
-                            showConfirmButton: true
-                        }).then((result)=>{
-                            location.reload();
-                        });
+                    progress++;
+                    var presentase = (parseInt((progress<i_cek?data.no_data_next:jml_dt+1)))/(parseInt(jml_dt)+1)*100;
+                    if(parseInt(no_data_next)<parseInt(jml_dt)){
+                        if(data.sts){
+                            $('.progress-bar').css('width',presentase+"%");
+                            $('.progress-bar').text('Menghitung.. '+(progress<i_cek?progress:i_cek)+'/'+parseInt(i_cek)+'('+presentase.toFixed(1)+'%)');
+                            h_data(parseInt(data.no_data_next));
+                        }else{
+                            $('#progress').hide();
+                            swal.fire({
+                                title: 'Error',
+                                text: data.sts+'Perhitungan gagal silahkan coba lagi nanti, '+data.msg,
+                                type: 'error',
+                                showConfirmButton: true
+                            });
+                            $('#alertHitung').show();
+                            $('#alertHitung').addClass('show');
+                            $('#alerMsg').html('<strong>'+i_cek+' data kelas prediksi</strong> belum dihitung, <button class="btn-hitung-now btn btn-sm btn-primary" role="button">Mulai hitung</button> sekarang?');
+                            $('.btn-hitung-now').removeAttr('disabled');
+                            btnClick();
+                        }
                     }else{
-                        swal.fire({
-                            title: 'Error',
-                            text: 'Perhitungan gagal silahkan coba lagi nanti',
-                            type: 'error',
-                            showConfirmButton: true
-                        });
+                        $('.progress-bar').css('width',100+"%");
+                        $('.progress-bar').text('Menghitung.. '+parseInt(i_cek)+'/'+parseInt(i_cek)+'('+100+'%)');
+                        if(data.sts){
+                            swal.fire({
+                                title: 'Selamat',
+                                text: 'Perhitungan berhasil',
+                                type: 'success',
+                                showConfirmButton: true
+                            }).then((result)=>{
+                                location.reload();
+                            });
+                        }else{
+                            swal.fire({
+                                title: 'Error',
+                                text: data.sts+'Perhitungan gagal silahkan coba lagi nanti, '+data.msg,
+                                type: 'error',
+                                showConfirmButton: true
+                            });
+                            $('#alertHitung').show();
+                            $('#alertHitung').addClass('show');
+                            $('#alerMsg').html('<strong>'+i_cek+' data kelas prediksi</strong> belum dihitung, <button class="btn-hitung-now btn btn-sm btn-primary" role="button">Mulai hitung</button> sekarang?');
+                            $('.btn-hitung-now').removeAttr('disabled');
+                            btnClick();
+                        }
                     }
                     $('#pageLoading').removeClass("show");
                     $('#pageLoading').hide();
-                    console.log(data);
-                },
-                error: function (data) {
-                    console.log(data);
-                    swal.fire({
-                            title: 'Error',
-                            text: data.responseJSON.message,
-                            type: 'error',
-                            showConfirmButton: true
-                        });
-                    $('#pageLoading').removeClass("show");
-                    $('#pageLoading').hide();
-                },
-            });
+                    $('.btn-hitung-now').removeAttr('disabled');
+
+                },error: function (data) {
+                        console.log(data);
+                        $('#progress').hide();
+                        swal.fire({
+                                title: 'Error',
+                                text: data.responseJSON.message,
+                                type: 'error',
+                                showConfirmButton: true
+                            });
+                        $('#pageLoading').removeClass("show");
+                        $('#pageLoading').hide();
+                        $('#alertHitung').show();
+                        $('#alertHitung').addClass('show');
+                        $('#alerMsg').html('<strong>'+i_cek+' data kelas prediksi</strong> belum dihitung, <button class="btn-hitung-now btn btn-sm btn-primary" role="button">Mulai hitung</button> sekarang?');
+                        $('.btn-hitung-now').removeAttr('disabled');
+                        btnClick();
+                    },
+                });
             // $(jqxhr).on("downloadProgress", perhitunganProgres);
         }
-    {{--
-        function perhitunganProgres(e){
-            if (e.lengthComputable) {
-                $('.text-load').text("(3/3) Melakukan perhitungan...");
-                var percentage = parseInt((e.loaded * 100) / e.total);
-                console.log(percentage);
-                
-                $('.progress-bar').css('width',percentage+"%");
-                $('.progress-bar').text(percentage+'%');
-
-                if (percentage >= 100) {
-                    $('.bedge-loading').fadeOut();
-                    $('.progress').fadeOut();
-                }
-            }
-        }
-        function uploadProgress(e) {
-            if (e.lengthComputable) {
-                var percentComplete = parseInt((e.loaded * 100) / e.total);
-                console.log(percentComplete);
-
-                $('.progress-bar').css('width',percentComplete+"%");
-                $('.progress-bar').text(percentComplete+'%');
-
-                if (percentComplete >= 100) {
-                    $('.progress-bar').css('width',"0%");
-                    $('.progress-bar').text('0%');
-                }
-            }
-        }
-
-        function downloadProgress(e) {
-            if (e.lengthComputable) {
-                $('.text-load').text("(2/3) Melakukan normalisasi...");
-                var percentage = parseInt((e.loaded * 100) / e.total);
-                console.log(percentage);
-                
-                $('.progress-bar').css('width',percentage+"%");
-                $('.progress-bar').text(percentage+'%');
-
-                if (percentage >= 100) {
-                    $('.progress-bar').css('width',"0%");
-                    $('.progress-bar').text('0%');
-                    h_data();
-                }
-            }
-        }
-    --}}
-
     })
 </script>
 @endsection

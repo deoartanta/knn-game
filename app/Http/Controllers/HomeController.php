@@ -60,7 +60,25 @@ class HomeController extends Controller
 
     public function normalizeData()
     {
+        // $dist = new Distances;
+        // $dt_norm_arr = [];        
+        // $this->pred_controll->hitung(false, $data);
         return $this->analytic_controll->normalizeDTPage();
+    }
+    public function analisDataOne(Request $req,$no_data){
+        $dt_bru = $req->input('dt_bru')=='false'?false:true;
+        $jml_dt = $this->dt_evals->count();
+        
+        $data['no_data'] = $no_data;
+        $data['type'] = $req->input('type');
+        $hsl = $this->pred_controll->hitung($dt_bru, $data);
+        $data['DtEvals'] = DtEvals::all()
+                                ->where('kelas_prediksi','<>','0')
+                                ->where('kelas_prediksi',null);
+        $data['no_data_next'] = $data['DtEvals']->count()!=0?$data['DtEvals']->first()->no:$jml_dt;
+        $data['sts'] = $hsl['sts'];
+        $data['msg'] = $hsl['sts']?"Perhitungan berhasil":$hsl['msg'];
+        return json_encode($data);
     }
     public function analisData(Request $req){
         $data = [];
@@ -76,9 +94,12 @@ class HomeController extends Controller
                 
             case 'h-data':        
                 $dt_bru = $req->input('dt_bru')=='false'?false:true;
-                $this->pred_controll->hitung($dt_bru, $this->dt_evals->get());
-                $data['sts'] = true;
-                $data['msg'] = "Perhitungan berhasil";
+                // $data['dt_evals'] = $this->dt_evals->get();
+                $data['no_data'] = null;
+                $data['type'] = null;
+                $hsl = $this->pred_controll->hitung($dt_bru, $data);
+                $data['sts'] = $hsl['sts'];
+                $data['msg'] = $hsl['sts']?"Perhitungan berhasil":$hsl['msg'];
                 break;
 
             default:
