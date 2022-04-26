@@ -114,7 +114,7 @@ class PredictionController extends Controller
                             'jml_k'=>$jml_k,
                      ]);
     }
-    public function create_jmlK(){
+    public function create_jmlK($k){
         $db_dt_evals = new DtEvals;
         $dt_evals = $db_dt_evals->get();
         // dd($dt_evals->last()->jml_k===null);
@@ -125,7 +125,7 @@ class PredictionController extends Controller
             $jml_k_tmp = $jml_k_tmp%2==0?$jml_k_tmp:$jml_k_tmp-1;
             $jml_k_tmp = ($jml_k_tmp>3?$jml_k_tmp/2:$jml_k_tmp);
             $jml_k=(($jml_k_tmp%2)==0?($jml_k_tmp+1):$jml_k_tmp);
-            $up_dt_evals = DtEvals::where('kelas','<>',null)->update(['jml_k'=>$jml_k]);
+            $up_dt_evals = DtEvals::where('kelas','<>',null)->update(['jml_k'=>($k!=null?$k:$jml_k)]);
             // dd($jml_k);
         // }
     }
@@ -265,7 +265,7 @@ class PredictionController extends Controller
                 //         $dt_eval_add['kelas_prediksi'] = $kelas;
                 //         $dt_eval_all_arr[$i++] = $dt_eval_add;
             //     }
-            if($data['type']=='one'){
+            if(true){
                 $pred_dt = Prediction::leftJoin('dt_evals','dt_evals.no','pred_datas.no_data')
                 ->leftJoin('normalisasi','pred_datas.id','normalisasi.prediction_dt_id')
                 ->select('dt_evals.id as id_eval','pred_datas.id as id_pred',
@@ -276,7 +276,7 @@ class PredictionController extends Controller
                 $pred_all_dt = $pred_dt->get();
                 $data['sts'] = true;
                 if ($data['no_data']==1) {
-                    $this->create_jmlK();
+                    $this->create_jmlK($data['k']);
                     $jml_norm = Normalisasi::all()->count();
                     $jml_pred_dt =$pred_dt->count();
                     if($jml_norm!=$jml_pred_dt){
@@ -297,7 +297,7 @@ class PredictionController extends Controller
                 $jml_b = 0;
                 $dist = $this->createKelas($data,false);
                 foreach ($dist as $key_dist => $val_dist) {
-                if (($key_dist)<$val->jml_k) {
+                if (($key_dist)<$data['k']) {
                         if ($val_dist->kelas==0) {
                             $jml_r++;
                         } else if($val_dist->kelas==1){
@@ -317,7 +317,7 @@ class PredictionController extends Controller
                 // dd($jml_r<$jml_b?1:0);
 
             }else{
-                $this->create_jmlK();
+                $this->create_jmlK($data['k']);
                 $jml_quest = Question::all()->count();
                 $i_q = 1;
                 $jml_norm = Normalisasi::all()->count();

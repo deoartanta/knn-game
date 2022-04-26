@@ -68,14 +68,27 @@ class HomeController extends Controller
     public function analisDataOne(Request $req,$no_data){
         $dt_bru = $req->input('dt_bru')=='false'?false:true;
         $jml_dt = $this->dt_evals->count();
+        // dd($req->input("progress")+1);
         
         $data['no_data'] = $no_data;
+        $data['k'] = $req->input('k');
+        // return $data['k'];
         $data['type'] = $req->input('type');
-        $hsl = $this->pred_controll->hitung($dt_bru, $data);
-        $data['DtEvals'] = DtEvals::all()
-                                ->where('kelas_prediksi','<>','0')
-                                ->where('kelas_prediksi',null);
-        $data['no_data_next'] = $data['DtEvals']->count()!=0?$data['DtEvals']->first()->no:$jml_dt;
+        if($data['type']=="all"){
+            $hsl = $this->pred_controll->hitung($dt_bru, $data);
+            $data['DtEvals'] = DtEvals::all();
+            $data['no_data_next'] = $no_data+1;
+            $data['progress_max'] = $jml_dt;
+        }else{
+            $data['DtEvals'] = DtEvals::all()
+                            ->where('kelas_prediksi','<>','0')
+                            ->where('kelas_prediksi',null);
+            $data['no_data_next'] = $data['DtEvals']->count()!=0?$data['DtEvals']->first()->no:$jml_dt+1;
+            $data['progress_max'] = $req->input("progress_max");
+            $data['no_data'] = $data['no_data_next'];
+            $hsl = $this->pred_controll->hitung($dt_bru, $data);
+        }
+        $data['progress'] = $req->input("progress")+1;
         $data['sts'] = $hsl['sts'];
         $data['msg'] = $hsl['sts']?"Perhitungan berhasil":$hsl['msg'];
         return json_encode($data);

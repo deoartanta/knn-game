@@ -46,7 +46,7 @@
                                         <td><b>Recall</b></td>
                                         <td><div class="badge badge-info">{{ $recall }} %</div> </td>
                                     </tr>
-                                    <tr>
+                                    {{-- <tr>
                                         <td>4</td>
                                         <td><b>F Rate</b></td>
                                         <td><div class="badge badge-danger">{{ $F_Rate }} %</div> </td>
@@ -65,7 +65,7 @@
                                         <td>7</td>
                                         <td><b> AUC(Area Under Curver)</b></td>
                                         <td><div class="badge badge-success">{{ $auc }}</div> </td>
-                                    </tr>
+                                    </tr> --}}
                                 </tbody>
                             </table>
                         </div>

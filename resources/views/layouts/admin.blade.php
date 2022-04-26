@@ -26,6 +26,7 @@
   <!-- summernote -->
   <link rel="stylesheet" href="{{ asset('admin/plugins/summernote/summernote-bs4.css') }}">
   <link rel="stylesheet" href="{{ asset('admin/plugins/datatables/dataTables.bootstrap4.css') }}">
+  <link rel="stylesheet" href="{{ asset('assets\sweet\sweetalert2.min.css') }}">
   <!-- Google Font: Source Sans Pro -->
 <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
@@ -237,7 +238,9 @@
   {{-- <script src="https://adminlte.io/themes/v3/dist/js/demo.js"></script> --}}
   <script src="{{ asset('admin/plugins/datatables/jquery.dataTables.js') }}"></script>
   <script src="{{ asset('admin/plugins/datatables/dataTables.bootstrap4.js') }}"></script>
-  <script src="{{ asset('assets\sweet\sweetalert2.all.js')}}"></script>
+  <script src="{{ asset('assets\sweetalert2\dist\sweetalert2.all.js')}}"></script>
+  {{-- <script src="{{ asset('assets\sweet\sweetalert2.all.js')}}"></script> --}}
+  {{-- <script src="sweetalert2\src\SweetAlert.js"></script> --}}
   @yield('script')
   <script>
     $(function() {

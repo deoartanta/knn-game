@@ -73,6 +73,11 @@
             <div class="card-body">
                 <h5 class="card-title">Evaluation Data 
                 </h5>
+                <div class="aksi-hitung my-2">
+                    
+                    <button class="btn-hitung-knn btn btn-sm btn-primary" role="button">Hitung KNN</button>
+                    <button class="btn-hitung-knn-cus btn btn-sm btn-outline-info d-none" role="button">Hitung KNN(0)</button>
+                </div>
                 <div class="progress m-1 bg-secondary" id="progress">
                     <div class="progress-bar bg-primary" role="progressbar" style="width: 100%;"
                         aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">100%</div>
@@ -137,6 +142,7 @@
             </div>
         </div>
     </div>
+    
 </section>
 @endsection
 
@@ -146,9 +152,10 @@
         var i =0;
         var dt_end =$('.kelas-prediksi').length;
         var i_cek = 0;
-        var progress = 0;
         $('#alertHitung').hide();
         $('#progress').hide();
+        $('.btn-hitung-knn-cus').hide();
+        $('.btn-hitung-knn-cus').removeClass('d-none');
         if (dt_end!=0){
             $('#pageLoading').addClass("show");
             $('#pageLoading').show();
@@ -172,24 +179,41 @@
                             swal.fire({
                                 title: 'Peringatan',
                                 text: i_cek+' data kelas prediksi belum dihitung, apakah anda ingin menghitungnya sekarang ?',
-                                type: 'warning',
+                                icon: 'info',
                                 showConfirmButton: true,
                                 showCancelButton: true,
                                 confirmButtonText:'Hitung sekarang'
                             }).then((result)=>{
+                                $('#alerMsg').html('<strong>'+i_cek+' data belum dilakukan perhitungan</strong> KNN!!');
+                                
+                                $('.btn-hitung-knn-cus').show();
+                                $('.btn-hitung-knn-cus').html('Hitung KNN <span class="badge badge-danger">'+i_cek+'</span>');
+                                $('#pageLoading').removeClass("show");
+                                $('#pageLoading').hide();
+                                $('#alertHitung').show();
+                                $('#alertHitung').addClass('show');
+                                // btnClick();
                                 if(result.value){
                                     $('#analis-data [name=aksi]').val('n-data');
-                                    $('#analis-data').submit();
-                                }else{
-                                    // $('.bedge-loading').fadeOut();
-                                    // $('.progress').fadeOut();
-                                    $('#pageLoading').removeClass("show");
-                                    $('#pageLoading').hide();
-                                    $('#alertHitung').show();
-                                    $('#alertHitung').addClass('show');
-                                    $('#alerMsg').html('<strong>'+i_cek+' data kelas prediksi</strong> belum dihitung, <button class="btn-hitung-now btn btn-sm btn-primary" role="button">Mulai hitung</button> sekarang?');
+                                    swal.fire({
+                                        title: 'PERHITUNGAN KNN',
+                                        text: 'Jumlah data yang akan dihitung adalah '+{{ $data_eval->count() }}+', lanjutkan perhitungan??',
+                                        icon: 'question',
+                                        showCancelButton: true,
+                                        showConfirmButton: true,
+                                        showCancelButton: true,
+                                        confirmButtonText:'Lanjutkan',
+                                        cancelButtonText:'Tidak, Hitung '+i_cek+' data saja!',
+                                        showCancelButton: true
+                                    }).then((result)=>{
+                                        if(result.isConfirmed){
+                                            modalHitungKnn();
+                                        }else{
+                                            modalHitungKnnCus();
+                                        }
+                                    });
+                                    // $('#analis-data').submit();
                                 }
-                                btnClick();
                             });
                         }else{
                             $('#pageLoading').hide();
@@ -198,20 +222,91 @@
                     }
                 }, 100);
         })
-        function btnClick(){
-            $('.btn-hitung-now').click(function() {
-                $('#pageLoading').addClass("show");
-                $('#pageLoading').show();
-                $('#analis-data [name=aksi]').val('n-data');
-                $('#analis-data').submit();
-                $(this).attr('disabled','true');
+        function modalHitungKnn(){
+            swal.fire({
+                title: 'PERHITUNGAN KNN',
+                input: 'text',
+                inputLabel: 'Masukan nilai K',
+                inputValue: '3',
+                icon: 'info',
+                showCancelButton: true,
+                showConfirmButton: true,
+                showCancelButton: true,
+                confirmButtonText:'Hitung {{ $data_eval->count() }} Data',
+                // showDenyButton: true,
+                // denyButtonColor:'#00d576',
+                // denyButtonText:'Hitung ('+i_cek+')',
+                showCancelButton: true,
+                inputValidator: (value) => {
+                    var validasiAngka = /^[0-9]+$/;
+                    if (value) {
+                        if(!value.match(validasiAngka)){
+                            return "Inputan harus angka!";
+                        }
+                    }else{
+                        return 'Inputan tidak boleh kosong!!'
+                    }
+                }
+
+            }).then((result)=>{
+                if(result.isConfirmed){
+                    n_data("all",result.value);
+                // }else if(result.isDenied){
+                //     n_data("one",result.value);
+                }else{
+                    
+                }
+            });
+        }
+        {//btn click hitung knn
+            $('.btn-hitung-knn').click(function() {
+                modalHitungKnn();
+            });
+        }
+        function modalHitungKnnCus(){
+            swal.fire({
+                title: 'PERHITUNGAN KNN',
+                input: 'text',
+                inputLabel: 'Masukan nilai K',
+                inputValue: '3',
+                icon: 'info',
+                showCancelButton: true,
+                showConfirmButton: true,
+                showCancelButton: true,
+                confirmButtonText:'Hitung '+i_cek+' Data',
+                showCancelButton: true,
+                inputValidator: (value) => {
+                    var validasiAngka = /^[0-9]+$/;
+                    if (value) {
+                        if(!value.match(validasiAngka)){
+                            return "Inputan harus angka!";
+                        }
+                    }else{
+                        return 'Inputan tidak boleh kosong!!'
+                    }
+                }
+
+            }).then((result)=>{
+                if(result.isConfirmed){
+                    n_data("one",result.value);
+                // }else if(result.isDenied){
+                //     n_data("one",result.value);
+                }else{
+                    
+                }
+            });
+        }
+        {//btn click hitung knn custom
+            $('.btn-hitung-knn-cus').click(function() {
+                modalHitungKnnCus();
             });
         }
         $('#analis-data').submit(function(e){
             e.preventDefault();
-            n_data($(this));
+            // n_data($(this));
         });
-        function n_data(_this){
+        function n_data(type,k){
+            
             $('#progress').show();
             $('.progress-bar').css('width',"0%");
             $('.progress-bar').text('Normalisasi 0 %');
@@ -221,7 +316,7 @@
             --}}
             $('#pageLoading').addClass("show");
             $('#pageLoading').show();
-            var formData = _this.serialize();
+            // var formData = _this.serialize();
             $.ajax({
                 type: "POST",
                 url: "{{ route('n-data-analis') }}",
@@ -236,20 +331,21 @@
                         swal.fire({
                             title: 'Error',
                             text: 'Normalisasi Gagal',
-                            type: 'error',
+                            icon: 'error',
                             showConfirmButton: true
                         });
                         $('#pageLoading').removeClass("show");
                         $('#pageLoading').hide();
                     }else{
                         $('#analis-data [name=aksi]').val('h-data');
-                        var jml_dt = '{{ $data_eval->count() }}';
-                        var presentase = 1/(parseInt(jml_dt)+1)*100;
+                        var jml_dt = (type=="all"?'{{ $data_eval->count() }}':i_cek);
+                        var presentase = 0.5/(parseInt(jml_dt))*100;
+                        
                         $('.progress-bar').css('width',presentase+"%");
                         $('.progress-bar').text('Normalisasi '+presentase.toFixed(1)+'%');
                         $('#pageLoading').addClass("show");
                         $('#pageLoading').hide();
-                        h_data(1);
+                        h_data(k,1,type,1,jml_dt);
                     }
                 },
                 error: function (data) {
@@ -259,24 +355,19 @@
                     swal.fire({
                             title: 'Error',
                             text: data.responseJSON.message,
-                            type: 'error',
+                            icon: 'error',
                             showConfirmButton: true
                     });
-                    $('#alertHitung').show();
-                    $('#alertHitung').addClass('show');
-                    $('#alerMsg').html('<strong>'+i_cek+' data kelas prediksi</strong> belum dihitung, <button class="btn-hitung-now btn btn-sm btn-primary" role="button">Mulai hitung</button> sekarang?');
-                    btnClick();
+                    // $('#alertHitung').show();
+                    // $('#alertHitung').addClass('show');
+                    // $('#alerMsg').html('<strong>'+i_cek+' data kelas prediksi</strong> belum dihitung, <button class="btn-hitung-now btn btn-sm btn-primary" role="button">Mulai hitung</button> sekarang?');
+                    // btnClick();
+
                     // $('.btn-hitung-now').removeAttr('disabled');
                 },
             });
         }
-        function h_data(no_data_next){
-            {{-- 
-                $('.bedge-loading').show();
-                $('.progress').show();
-                $('.progress-bar').css('width',"0%");
-                $('.progress-bar').text('0%');
-            --}}
+        function h_data(k,no_data_next,type,progress,progress_max){
             var jml_dt = '{{ $data_eval->count() }}';
             $.ajax({
                 type: "POST",
@@ -287,38 +378,45 @@
                     "_token": "{{ csrf_token() }}",
                     "aksi": "h-data",
                     "dt_bru":false,
-                    "type": "one"
+                    "progress":progress,
+                    "progress_max":progress_max,
+                    "k":k,
+                    "type": type
                 },
                 success: function (data) {
-                    progress++;
-                    var presentase = (parseInt((progress<i_cek?data.no_data_next:jml_dt+1)))/(parseInt(jml_dt)+1)*100;
-                    if(parseInt(no_data_next)<parseInt(jml_dt)){
+                    // var presentase = (parseInt(data.no_data_next))/(parseInt(jml_dt)+1)*100;
+                    var presentase = parseInt(progress)/(parseInt(data.progress_max))*100;
+                    // alert("presentase Hitung : "+presentase+"="+progress+"/"+((parseInt(data.progress_max))+"*"+100));
+
+                    if(parseInt(progress)<parseInt(data.progress_max)){
                         if(data.sts){
                             $('.progress-bar').css('width',presentase+"%");
-                            $('.progress-bar').text('Menghitung.. '+(progress<i_cek?progress:i_cek)+'/'+parseInt(i_cek)+'('+presentase.toFixed(1)+'%)');
-                            h_data(parseInt(data.no_data_next));
+                            $('.progress-bar').text('Menghitung.. '+parseInt(progress)+'/'+parseInt(data.progress_max)+'('+presentase.toFixed(1)+'%)');
+                            // $('.progress-bar').text('Menghitung.. '+(progress<i_cek?progress:i_cek)+'/'+parseInt(i_cek)+'('+presentase.toFixed(1)+'%)');
+                            h_data(k,parseInt(data.no_data_next),type,data.progress,data.progress_max);
                         }else{
                             $('#progress').hide();
                             swal.fire({
                                 title: 'Error',
                                 text: data.sts+'Perhitungan gagal silahkan coba lagi nanti, '+data.msg,
-                                type: 'error',
+                                icon: 'error',
                                 showConfirmButton: true
                             });
-                            $('#alertHitung').show();
-                            $('#alertHitung').addClass('show');
-                            $('#alerMsg').html('<strong>'+i_cek+' data kelas prediksi</strong> belum dihitung, <button class="btn-hitung-now btn btn-sm btn-primary" role="button">Mulai hitung</button> sekarang?');
-                            $('.btn-hitung-now').removeAttr('disabled');
+                            // $('#alertHitung').show();
+                            // $('#alertHitung').addClass('show');
+                            // $('#alerMsg').html('<strong>'+i_cek+' data kelas prediksi</strong> belum dihitung, <button class="btn-hitung-now btn btn-sm btn-primary" role="button">Mulai hitung</button> sekarang?');
+
+                            // $('.btn-hitung-now').removeAttr('disabled');
                             btnClick();
                         }
                     }else{
                         $('.progress-bar').css('width',100+"%");
-                        $('.progress-bar').text('Menghitung.. '+parseInt(i_cek)+'/'+parseInt(i_cek)+'('+100+'%)');
+                        $('.progress-bar').text('Menghitung.. '+parseInt(progress)+'/'+parseInt(data.progress_max)+'('+100+'%)');
                         if(data.sts){
                             swal.fire({
                                 title: 'Selamat',
-                                text: 'Perhitungan berhasil',
-                                type: 'success',
+                                text: data.msg,
+                                icon: 'success',
                                 showConfirmButton: true
                             }).then((result)=>{
                                 location.reload();
@@ -327,13 +425,14 @@
                             swal.fire({
                                 title: 'Error',
                                 text: data.sts+'Perhitungan gagal silahkan coba lagi nanti, '+data.msg,
-                                type: 'error',
+                                icon: 'error',
                                 showConfirmButton: true
                             });
-                            $('#alertHitung').show();
-                            $('#alertHitung').addClass('show');
-                            $('#alerMsg').html('<strong>'+i_cek+' data kelas prediksi</strong> belum dihitung, <button class="btn-hitung-now btn btn-sm btn-primary" role="button">Mulai hitung</button> sekarang?');
-                            $('.btn-hitung-now').removeAttr('disabled');
+                            // $('#alertHitung').show();
+                            // $('#alertHitung').addClass('show');
+                            // $('#alerMsg').html('<strong>'+i_cek+' data kelas prediksi</strong> belum dihitung, <button class="btn-hitung-now btn btn-sm btn-primary" role="button">Mulai hitung</button> sekarang?');
+                            // $('.btn-hitung-now').removeAttr('disabled');
+
                             btnClick();
                         }
                     }
@@ -347,15 +446,17 @@
                         swal.fire({
                                 title: 'Error',
                                 text: data.responseJSON.message,
-                                type: 'error',
+                                icon: 'error',
                                 showConfirmButton: true
                             });
                         $('#pageLoading').removeClass("show");
                         $('#pageLoading').hide();
                         $('#alertHitung').show();
                         $('#alertHitung').addClass('show');
-                        $('#alerMsg').html('<strong>'+i_cek+' data kelas prediksi</strong> belum dihitung, <button class="btn-hitung-now btn btn-sm btn-primary" role="button">Mulai hitung</button> sekarang?');
-                        $('.btn-hitung-now').removeAttr('disabled');
+
+                        // $('#alerMsg').html('<strong>'+i_cek+' data kelas prediksi</strong> belum dihitung, <button class="btn-hitung-now btn btn-sm btn-primary" role="button">Mulai hitung</button> sekarang?');
+
+                        // $('.btn-hitung-now').removeAttr('disabled');
                         btnClick();
                     },
                 });
