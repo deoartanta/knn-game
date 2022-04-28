@@ -28,7 +28,8 @@ class analyticController extends Controller
     public function evalDTPage(){
         $data['data_eval']=DtEvals::all();
         $data['data_pred']=Prediction::leftJoin('dt_evals','dt_evals.no','=','pred_datas.no_data')
-                            ->select('dt_evals.*','pred_datas.*')->get();
+                            ->select('dt_evals.*','pred_datas.*')
+                            ->where('dt_type','testDT')->get();
                             // dd($data['data_pred']->first());
         $data['question']=Question::all();
         // $data['n_data']=Normalisasi::all();
@@ -39,7 +40,7 @@ class analyticController extends Controller
         $ques = new Question;
         $norm =
         Normalisasi::leftJoin('pred_datas','normalisasi.prediction_dt_id','=','pred_datas.id')->select('normalisasi.*','pred_datas.*')->get();
-        $data['data_eval']=$dt_evals->get();
+        $data['data_eval']=$dt_evals->where('dt_type','testDT')->get();
         $data['question']=$ques->get();
         $data['n_data']=$norm;
         $data['jml_dataBru']=$data['data_eval']->count()-($data['n_data']->count()/9);

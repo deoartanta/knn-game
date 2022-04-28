@@ -148,55 +148,57 @@
         $('#pageLoading').removeClass("show");
         $('#pageLoading').hide();
         $('.btn-hitung-now').click(function() {
-        $('#analis-data [name=aksi]').val('n-data');
-        $('#pageLoading').addClass("show");
-        $('#pageLoading').show();
-        $_this = $(this);
-        $_this.attr('disabled','true');
-        $.ajax({
-            type: "POST",
-            url: "{{ route('n-data-analis') }}",
-            data:{
-                "_token": "{{ csrf_token() }}",
-                "aksi": "n-data"
+            $('#analis-data [name=aksi]').val('n-data');
+            $('#pageLoading').addClass("show");
+            $('#pageLoading').show();
+            $_this = $(this);
+            $_this.attr('disabled','true');
+            $.ajax({
+                type: "POST",
+                url: "{{ route('n-data-analis') }}",
+                data:{
+                    "_token": "{{ csrf_token() }}",
+                    "aksi": "n-data",
+                    "dt_type":"testDT"
+                    },
+                cache: false,
+                dataType: 'json',
+                success: function (data) {
+                    $('#pageLoading').removeClass("show");
+                    $('#pageLoading').hide();
+                    if(!data.sts){
+                        swal.fire({
+                            title: 'Error',
+                            text: 'Normalisasi Gagal',
+                            icon: 'error',
+                            showConfirmButton: true
+                        });
+                        $_this.attr('disabled','false');
+                    }else{
+                        swal.fire({
+                            title: 'Selamat',
+                            text: 'Normalisasi Berhasil',
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer:1500
+                        }).then((result)=>{
+                            location.reload();
+                        });
+                    }
                 },
-            cache: false,
-            dataType: 'json',
-            success: function (data) {
-                $('#pageLoading').removeClass("show");
-                $('#pageLoading').hide();
-                if(!data.sts){
+                error: function (data) {
+                    $('#pageLoading').removeClass("show");
+                    $('#pageLoading').hide();
                     swal.fire({
-                        title: 'Error',
-                        text: 'Normalisasi Gagal',
-                        type: 'error',
-                        showConfirmButton: true
-                    });
+                            title: 'Error',
+                            text: data.responseJSON.message,
+                            icon: 'error',
+                            showConfirmButton: true
+                        });
                     $_this.attr('disabled','false');
-                }else{
-                    swal.fire({
-                        title: 'Selamat',
-                        text: 'Normalisasi Berhasil',
-                        type: 'success',
-                        showConfirmButton: true
-                    }).then((result)=>{
-                        location.reload();
-                    });
-                }
-            },
-            error: function (data) {
-                $('#pageLoading').removeClass("show");
-                $('#pageLoading').hide();
-                swal.fire({
-                        title: 'Error',
-                        text: data.responseJSON.message,
-                        type: 'error',
-                        showConfirmButton: true
-                    });
-                $_this.attr('disabled','false');
-            },
+                },
+            });
         });
-    });
     })
 </script>
     

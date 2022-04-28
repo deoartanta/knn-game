@@ -16,6 +16,7 @@ class CreateDtEvalsTable extends Migration
         Schema::create('dt_evals', function (Blueprint $table) {
             $table->id();
             $table->BigInteger('no')->index();
+            $table->string('dt_type')->nullable();
             $table->integer('kelas')->nullable();
             $table->integer('kelas_prediksi')->nullable();
             $table->bigInteger('jml_k')->nullable();

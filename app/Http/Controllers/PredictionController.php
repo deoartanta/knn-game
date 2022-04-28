@@ -268,6 +268,7 @@ class PredictionController extends Controller
             if(true){
                 $pred_dt = Prediction::leftJoin('dt_evals','dt_evals.no','pred_datas.no_data')
                 ->leftJoin('normalisasi','pred_datas.id','normalisasi.prediction_dt_id')
+                ->where('dt_type',$data['dt_type'])
                 ->select('dt_evals.id as id_eval','pred_datas.id as id_pred',
                     'pred_datas.no_data as no_pred','dt_evals.no as no_eval',
                     'dt_evals.kelas','dt_evals.kelas_prediksi','dt_evals.jml_k','pred_datas.qu_id',
@@ -323,6 +324,7 @@ class PredictionController extends Controller
                 $jml_norm = Normalisasi::all()->count();
                 $pred_dt = Prediction::leftJoin('dt_evals','dt_evals.no','pred_datas.no_data')
                 ->leftJoin('normalisasi','pred_datas.id','normalisasi.prediction_dt_id')
+                ->where('dt_type',$data['dt_type'])
                 ->select('dt_evals.id as id_eval','pred_datas.id as id_pred','pred_datas.no_data as no_pred','dt_evals.no as no_eval','dt_evals.kelas','dt_evals.kelas_prediksi','dt_evals.jml_k','pred_datas.qu_id','pred_datas.value','normalisasi.val_normalisasi as val_norm')->get();
                 $jml_norm = Normalisasi::all()->count();
                 $jml_pred_dt =$pred_dt->count();
@@ -358,7 +360,7 @@ class PredictionController extends Controller
                         $db_dt_evals = $db_dt_evals->where('no',$val->no_eval)->first();
                         $db_dt_evals->kelas_prediksi = $jml_r < $jml_b ? 1 : 0 ;
                         $db_dt_evals->save();
-                        dd($jml_r.",".$jml_b.",".($jml_r<$jml_b?1:0));
+                        // dd($jml_r.",".$jml_b.",".($jml_r<$jml_b?1:0));
                         $data['val_norm'] = [];
                         // dd($db_dt_evals);
                         // dd($db_dt_evals.'=>('.$jml_r.','.$jml_b.')');

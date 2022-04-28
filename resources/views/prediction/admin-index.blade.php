@@ -28,7 +28,10 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header container">
-                            Prediksi Tingkat Bermain Game Pada Anak <button class="btn btn-success mx-2" type="button" data-toggle="modal" data-target="#import">Import</button>
+                            Prediksi Tingkat Bermain Game Pada Anak 
+                            @if($jmlDt==0)
+                                <button class="btn btn-success mx-2" type="button" data-toggle="modal" data-target="#import">Import</button>
+                            @endif
                         </div>
 
                         <div class="card-body">
@@ -37,7 +40,7 @@
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
-                                    <p class="mb-2">Mohon maaf saat ini system belum bisa melakukan <strong>Prediksi</strong>, silahkan import data terlebih dahulu!!</p>
+                                    <p class="mb-2">Mohon maaf saat ini system belum bisa melakukan <strong>Prediksi</strong>, silahkan import data test terlebih dahulu!!</p>
                                 </div>
                             @endif
                             @if (session()->get('sts'))
@@ -214,6 +217,7 @@
                 <div class="form-group">
                   <input type="file"
                     class="form-control pt-3 pb-5" name="import-data" id="import-data" aria-describedby="desInput" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"multiple required>
+                    <input type="hidden" name="dt_type" value="testDT">
                   <small id="desInput" class="form-text text-muted">File excel yang diupload adalah format 97-2003 workbook (.xls) dan Microsoft Excel Worksheet(.xlsx)</small>
                 </div>
             </div>
@@ -240,16 +244,18 @@
         swal.fire({
             title: 'Sukses',
             text: 'Hasil prediksi anda adalah {{ (session()->get('jml_r') > session()->get('jml_b')?"Ringan":"Berat") }}',
-            type: 'success',
-            showConfirmButton: true
+            icon: 'success',
+            showConfirmButton: false,
+            timer : 1500
         });
         @endif
         @if(session()->get('stsImport'))
             swal.fire({
                 title: 'Selamat',
                 text: 'Data berhasil diimport',
-                type: 'success',
-                showConfirmButton: true
+                icon: 'success',
+                showConfirmButton: false,
+                timer:1500
             });
         @endif
     })

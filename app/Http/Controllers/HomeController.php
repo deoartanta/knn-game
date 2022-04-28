@@ -9,12 +9,15 @@ use App\Models\DtEvals;
 use App\Models\Question;
 use App\Models\Normalisasi;
 use App\Models\importData;
+use App\Models\exportData;
 use App\Imports\ImportDTLatih;
+use App\Exports\ExportDTLatih;
 use Session;
 use App\Http\Controllers\analyticController;
 use App\Http\Controllers\PredictionController;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -46,7 +49,7 @@ class HomeController extends Controller
             $data = $this->analytic_controll->createConfutionMatrix();
             $data['user'] = Auth::user();
             $data['pred_dt'] = $this->pred_dt->get();
-            $data['dt_eval'] = $this->dt_evals->get();
+            $data['dt_eval'] = $this->dt_evals->where('dt_type','testDT')->get();
             // dd($data);
             return view('dashboard.dashboard', $data);
         } else {
@@ -67,22 +70,24 @@ class HomeController extends Controller
     }
     public function analisDataOne(Request $req,$no_data){
         $dt_bru = $req->input('dt_bru')=='false'?false:true;
-        $jml_dt = $this->dt_evals->count();
         // dd($req->input("progress")+1);
         
         $data['no_data'] = $no_data;
         $data['k'] = $req->input('k');
         // return $data['k'];
         $data['type'] = $req->input('type');
+        $data['dt_type'] = $req->input('dt_type');
         if($data['type']=="all"){
             $hsl = $this->pred_controll->hitung($dt_bru, $data);
-            $data['DtEvals'] = DtEvals::all();
+            $data['DtEvals'] = DtEvals::all()->where('dt_type',$data['dt_type']);
+            $jml_dt = $data['DtEvals']->count();
             $data['no_data_next'] = $no_data+1;
             $data['progress_max'] = $jml_dt;
         }else{
             $data['DtEvals'] = DtEvals::all()
                             ->where('kelas_prediksi','<>','0')
-                            ->where('kelas_prediksi',null);
+                            ->where('kelas_prediksi',null)
+                            ->where('dt_type',$data['dt_type']);
             $data['no_data_next'] = $data['DtEvals']->count()!=0?$data['DtEvals']->first()->no:$jml_dt+1;
             $data['progress_max'] = $req->input("progress_max");
             $data['no_data'] = $data['no_data_next'];
@@ -98,7 +103,8 @@ class HomeController extends Controller
         switch ($req->input('aksi')) {
             case 'n-data':
                 
-                $this->pred_controll->normalisasi($this->dt_evals->get(), $this->pred_dt->get());
+                $this->pred_controll->normalisasi($this->dt_evals->where('dt_type',$req->input('dt_type'))->get(),
+                $this->pred_dt->get());
 
                 $data['sts'] = true;
                 $data['msg'] = "Normalisasi sukses";
@@ -110,6 +116,7 @@ class HomeController extends Controller
                 // $data['dt_evals'] = $this->dt_evals->get();
                 $data['no_data'] = null;
                 $data['type'] = null;
+                $data['dt_type'] = $req->input('dt_type');
                 $hsl = $this->pred_controll->hitung($dt_bru, $data);
                 $data['sts'] = $hsl['sts'];
                 $data['msg'] = $hsl['sts']?"Perhitungan berhasil":$hsl['msg'];
@@ -129,7 +136,7 @@ class HomeController extends Controller
     }
     public function tambahData()
     {
-        $data['jmlDt'] = $this->pred_dt->get()->count();
+        $data['jmlDt'] = $this->dt_evals->where('dt_type','testDT')->get()->count();
         if(Session::get('stsImport')!=null){
             $data['stsImport'] = Session::get('stsImport');
             return view('prediction.admin-index', $data)->with(['stsImport'=>Session::get('stsImport')]);
@@ -137,6 +144,60 @@ class HomeController extends Controller
             return view('prediction.admin-index', $data);
         }
 
+    }
+    public function destroyDtUji($dt_type){
+        // dd($dt_type);
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        $del_evalsdDt = $this->dt_evals->where('dt_type',$dt_type);
+        Normalisasi::truncate();
+        foreach ($del_evalsdDt->get() as $key => $val) {
+            $del_predDt = $this->pred_dt->where('no_data',$val->no);
+            $del_predDt->delete();
+            // dd($del_predDt);
+        }
+        $del_evalsdDt->delete();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        $return['stsDel'] = true;
+
+        return redirect()->back()->with($return);
+    }
+    public function exportData($dt_type){
+        // $insert = $this->exportDtToTbl($dt_type);
+        // return Excel::download(new ExportDTLatih, 'data_uji.xlsx');
+
+        $pred_dt = $this->pred_dt->get();
+        $dt_evals = $this->dt_evals->where('dt_type',$dt_type)->get();
+        $dt_qu = new Question;
+        $dt_arr = [];
+        $dt_arr_all = [];
+        $heading = [];
+        $heading[0] = "No";
+        foreach ($dt_qu->get() as $key => $val) {
+            $heading[$key+1] = "Q".$val->id;
+        }
+        $heading[$dt_qu->count()+1] = "Kelas";
+        // dd($heading);
+        $no_qu = 0;
+        foreach ($dt_evals as $key => $val) {
+            $dt_arr[0] = $key+1;
+            foreach ($pred_dt as $key1 => $val1) {
+                if ($val1->no_data==$val->no) {
+                    $dt_arr[($no_qu+1)] = $val1->value;
+                    if($no_qu==$dt_qu->count()){
+                        $no_qu = 0;
+                        break;
+                    }
+                    $no_qu++;
+                }
+            }
+            $dt_arr[$dt_qu->count()+1] = $val->kelas==0?"Ringan":"Berat";
+            // $dt_arr["created_at"] = $val->created_at;
+            // $dt_arr["updated_at"] = $val->updated_at;
+            $dt_arr_all[$key+1] = $dt_arr;
+        }
+        // dd($dt_arr_all);
+        
+        return Excel::download(new ExportDTLatih($dt_arr_all,$heading), 'data_uji.xlsx');;
     }
     public function importData(Request $request)
     {
@@ -150,6 +211,7 @@ class HomeController extends Controller
  
 		// menangkap file excel
 		$file = $request->file('import-data');
+		$dt_type = $request->input('dt_type');
         $ext = pathinfo($file->getClientOriginalName(),PATHINFO_EXTENSION);
         // dd($ext);
 		// membuat nama file unik
@@ -165,16 +227,43 @@ class HomeController extends Controller
         Excel::import(new ImportDTLatih,public_path('/file_dt_latih/'.$nama_file));
         
         $return = [];
-        if($this->importDtToDb()->count()>0){
+        if($this->importDtToDb($dt_type)->count()>0){
             $return['stsImport'] = true;
         }else{
             $return['stsImport'] = false;
         }
         // return importData::all();
         
-        return redirect()->route('tambah')->with($return);
+        return redirect()->back()->with($return);
     }
-    function importDtToDb(){
+    function exportDtToTbl($dt_type){
+        exportData::truncate();
+        $pred_dt = $this->pred_dt->get();
+        $dt_evals = $this->dt_evals->where('dt_type',$dt_type)->get();
+        $dt_qu = new Question;
+        $dt_arr = [];
+        $dt_arr_all = [];
+        $no_qu = 1;
+        foreach ($dt_evals as $key => $val) {
+            foreach ($pred_dt as $key1 => $val1) {
+                if ($val1->no_data==$val->no) {
+                    $dt_arr["q".$no_qu] = $val1->value;
+                    if($no_qu==$dt_qu->count()){
+                        $no_qu = 1;
+                        break;
+                    }
+                    $no_qu++;
+                }
+            }
+            $dt_arr["kelas"] = $val->kelas;
+            $dt_arr["created_at"] = $val->created_at;
+            $dt_arr["updated_at"] = $val->updated_at;
+            $dt_arr_all[$key] = $dt_arr;
+        }
+        $insert = exportData::insert($dt_arr_all);
+        return $insert;
+    }
+    function importDtToDb($dt_type){
         $dtImport = importData::all();
         $pred_dt = $this->pred_dt->get();
         $dt_evals = $this->dt_evals->get();
@@ -188,6 +277,7 @@ class HomeController extends Controller
         $no_qu = 0;
         foreach ($dtImport as $key => $val) {
             $dt_evalsArr['no'] = ($no+1);
+            $dt_evalsArr['dt_type'] = $dt_type;
             $dt_evalsArr['kelas'] = $val->kelas;
             $dt_evalsArr_all[$no] = $dt_evalsArr;
             $val_for_data[1]=$val->q1;

@@ -1,7 +1,7 @@
 @extends('layouts.admin')
-@section('mo-prediction','menu-open')
-@section('prediction','active')
+@section('mo-eval-data','menu-open')
 @section('eval-data','active')
+@section('dt-uji','active')
 
 @section('style')
 <style>
@@ -33,7 +33,7 @@
   <div class="container-fluid">
     <div class="row mb-2">
       <div class="col-sm-6">
-        <h1 class="m-0 text-dark">Evaluation Data</h1>
+        <h1 class="m-0 text-dark">Test Data</h1>
     </div>
     <div id="alertHitung" class="col-sm-12 alert alert-danger  alert-dismissible fade" role="alert">
         {{-- <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -71,12 +71,17 @@
         
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">Evaluation Data 
+                <h5 class="card-title">Evaluation Data
                 </h5>
                 <div class="aksi-hitung my-2">
                     
-                    <button class="btn-hitung-knn btn btn-sm btn-primary" role="button">Hitung KNN</button>
-                    <button class="btn-hitung-knn-cus btn btn-sm btn-outline-info d-none" role="button">Hitung KNN(0)</button>
+                    <button class="btn-import btn btn-sm btn-success" role="button" data-toggle="modal" data-target="#import">Import</button>
+                    <a class="btn-export btn btn-sm btn-secondary" href="{{ route('export','testDT') }}" role="button">Export</a>
+                    @if ($data_pred->count()!=0)
+                        <button  class="btn-delete-all btn btn-sm btn-danger" role="button" role="button" data-toggle="modal" data-target="#destroy">Hapus Semua Data</button>
+                        <button class="btn-hitung-knn btn btn-sm btn-primary" role="button">Hitung KNN</button>
+                        <button class="btn-hitung-knn-cus btn btn-sm btn-outline-info d-none" role="button">Hitung KNN(0)</button>
+                    @endif
                 </div>
                 <div class="progress m-1 bg-secondary" id="progress">
                     <div class="progress-bar bg-primary" role="progressbar" style="width: 100%;"
@@ -99,11 +104,12 @@
                                     $no_data = 0;
                                     $jml_val = 0;
                                     $i = 0;
+                                    $no = 1;
                                 @endphp
                                 @foreach ($data_pred as $val) 
                                     @if ($no_data!=$val->no)
                                         <tr>
-                                            <td scope="row">{{ $val->no }}</td>
+                                            <td scope="row">{{ $no++ }}</td>
                                         @php
                                             $no_data = $val->no;
                                             $jml_val = $i;
@@ -144,6 +150,60 @@
     </div>
     
 </section>
+{{-- Modal --}}
+<div id="import" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="importData" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered " role="document">
+        <div class="modal-content bg-success">
+            <div class="modal-header">
+                <h5 class="modal-title" id="importData">Import Data</h5>
+                <button class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{ route('import') }}" id="form-import" method="post" enctype="multipart/form-data">
+                @csrf
+            <div class="modal-body bg-light">
+                <div class="form-group">
+                  <input type="file"
+                    class="form-control pt-3 pb-5" name="import-data" id="import-data" aria-describedby="desInput" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"multiple required>
+                    <input type="hidden" name="dt_type" value="testDT">
+                  <small id="desInput" class="form-text text-muted">File excel yang diupload adalah format 97-2003 workbook (.xls) dan Microsoft Excel Worksheet(.xlsx)</small>
+                </div>
+            </div>
+            <div class="modal-footer bg-light">
+                <button id="btn-import" type="submit" class="btn btn-success">Submit</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="destroy" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="delAllDT" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered " role="document">
+        <div class="modal-content bg-danger">
+            <div class="modal-header">
+                <h5 class="modal-title text-uppercase" id="destroy">Hapus semua data</h5>
+                <button class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{ route('del-dtUji','testDT') }}" id="form-import" method="get" enctype="multipart/form-data">
+                @csrf
+            <div class="modal-body bg-light">
+                <div class="form-group">
+                    <p>Semua data akan dihapus, anda yakin ingin melanjutkan??</p>
+                    <input type="hidden" name="dt_type" value="testDT">
+                    <small id="desInput" class="form-text text-danger"><strong>Peringatan : </strong>Data yang telah dihapus tidak akan bisa dikembalikan!!</small>
+                </div>
+            </div>
+            <div class="modal-footer bg-light">
+                <button id="btn-import" type="submit" class="btn btn-danger">Lanjutkan</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('script')
@@ -152,7 +212,9 @@
         var i =0;
         var dt_end =$('.kelas-prediksi').length;
         var i_cek = 0;
+        
         $('#alertHitung').hide();
+        $('#pageLoading').hide();
         $('#progress').hide();
         $('.btn-hitung-knn-cus').hide();
         $('.btn-hitung-knn-cus').removeClass('d-none');
@@ -177,12 +239,16 @@
                         // $('.spinner-grow').addClass('d-none');
                         if (i_cek>0) {
                             swal.fire({
-                                title: 'Peringatan',
                                 text: i_cek+' data kelas prediksi belum dihitung, apakah anda ingin menghitungnya sekarang ?',
-                                icon: 'info',
                                 showConfirmButton: true,
                                 showCancelButton: true,
-                                confirmButtonText:'Hitung sekarang'
+                                confirmButtonText:'Hitung sekarang',
+                                showClass: {
+                                    popup: 'animate__animated animate__fadeInDown'
+                                },
+                                hideClass: {
+                                    popup: 'animate__animated animate__fadeOutUp'
+                                }
                             }).then((result)=>{
                                 $('#alerMsg').html('<strong>'+i_cek+' data belum dilakukan perhitungan</strong> KNN!!');
                                 
@@ -224,11 +290,12 @@
         })
         function modalHitungKnn(){
             swal.fire({
-                title: 'PERHITUNGAN KNN',
+                // title: 'PERHITUNGAN KNN',
+                text :'Nilai K yang disarankan adalah bilangan ganjil!!',
                 input: 'text',
                 inputLabel: 'Masukan nilai K',
-                inputValue: '3',
-                icon: 'info',
+                inputValue: '{{ $data_eval->last()!=null?$data_eval->last()->jml_k:0 }}',
+                // icon: 'info',
                 showCancelButton: true,
                 showConfirmButton: true,
                 showCancelButton: true,
@@ -242,6 +309,8 @@
                     if (value) {
                         if(!value.match(validasiAngka)){
                             return "Inputan harus angka!";
+                        }else if(value=='0'){
+                            return "Inputan harus lebih dari 0!";
                         }
                     }else{
                         return 'Inputan tidak boleh kosong!!'
@@ -265,11 +334,12 @@
         }
         function modalHitungKnnCus(){
             swal.fire({
-                title: 'PERHITUNGAN KNN',
+                // title: 'PERHITUNGAN KNN',
+                text :'Nilai K yang disarankan adalah bilangan ganjil!!',
                 input: 'text',
                 inputLabel: 'Masukan nilai K',
-                inputValue: '3',
-                icon: 'info',
+                inputValue: '{{ $data_eval->last()!=null?$data_eval->last()->jml_k:0 }}',
+                // icon: 'info',
                 showCancelButton: true,
                 showConfirmButton: true,
                 showCancelButton: true,
@@ -280,6 +350,8 @@
                     if (value) {
                         if(!value.match(validasiAngka)){
                             return "Inputan harus angka!";
+                        }else if(value=='0'){
+                            return "Inputan harus lebih dari 0!";
                         }
                     }else{
                         return 'Inputan tidak boleh kosong!!'
@@ -322,7 +394,8 @@
                 url: "{{ route('n-data-analis') }}",
                 data:{
                     "_token": "{{ csrf_token() }}",
-                    "aksi": "n-data"
+                    "aksi": "n-data",
+                    "dt_type":"testDT"
                     },
                 cache: false,
                 dataType: 'json',
@@ -345,7 +418,7 @@
                         $('.progress-bar').text('Normalisasi '+presentase.toFixed(1)+'%');
                         $('#pageLoading').addClass("show");
                         $('#pageLoading').hide();
-                        h_data(k,1,type,1,jml_dt);
+                        h_data(k,"{{ $data_eval->first()!=null?$data_eval->first()->no:1 }}",type,1,jml_dt);
                     }
                 },
                 error: function (data) {
@@ -381,7 +454,8 @@
                     "progress":progress,
                     "progress_max":progress_max,
                     "k":k,
-                    "type": type
+                    "type": type,
+                    "dt_type":"testDT"
                 },
                 success: function (data) {
                     // var presentase = (parseInt(data.no_data_next))/(parseInt(jml_dt)+1)*100;
@@ -417,7 +491,8 @@
                                 title: 'Selamat',
                                 text: data.msg,
                                 icon: 'success',
-                                showConfirmButton: true
+                                showConfirmButton: false,
+                                timer:1500
                             }).then((result)=>{
                                 location.reload();
                             });

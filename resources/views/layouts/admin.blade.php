@@ -26,7 +26,9 @@
   <!-- summernote -->
   <link rel="stylesheet" href="{{ asset('admin/plugins/summernote/summernote-bs4.css') }}">
   <link rel="stylesheet" href="{{ asset('admin/plugins/datatables/dataTables.bootstrap4.css') }}">
+  {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/> --}}
   <link rel="stylesheet" href="{{ asset('assets\sweet\sweetalert2.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('assets\sweet\animate.css') }}">
   <!-- Google Font: Source Sans Pro -->
 <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
@@ -135,10 +137,28 @@
                     <p>Normalize Data</p>
                   </a>
                 </li>
+              </ul>
+            </li>
+            <li class="nav-item has-treeview @yield('mo-eval-data')">
+              <!--menu-open -->
+              <a href="#" class="nav-link @yield('eval-data')">
+                <i class="nav-icon fa fa-calculator"></i>
+                <p>
+                  Evaluation Data
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="{{ route('e-data') }}" class="nav-link @yield('eval-data')">
+                  <a href="{{ route('n-data') }}" class="nav-link @yield('dt-latih')">
                     <i class="far fa-circle nav-icon"></i>
-                    <p>Evaluation Data</p>
+                    <p>Training Data</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{ route('e-data') }}" class="nav-link @yield('dt-uji')">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Test Data</p>
                   </a>
                 </li>
               </ul>
@@ -238,6 +258,7 @@
   {{-- <script src="https://adminlte.io/themes/v3/dist/js/demo.js"></script> --}}
   <script src="{{ asset('admin/plugins/datatables/jquery.dataTables.js') }}"></script>
   <script src="{{ asset('admin/plugins/datatables/dataTables.bootstrap4.js') }}"></script>
+  {{-- <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script> --}}
   <script src="{{ asset('assets\sweetalert2\dist\sweetalert2.all.js')}}"></script>
   {{-- <script src="{{ asset('assets\sweet\sweetalert2.all.js')}}"></script> --}}
   {{-- <script src="sweetalert2\src\SweetAlert.js"></script> --}}

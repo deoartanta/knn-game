@@ -30,4 +30,6 @@ Route::post('/analis-data/{no_data}', 'HomeController@analisDataOne')->name('n-d
 Route::get('/analis-data/test/{no_data}', 'HomeController@analisDataOne')->name('n-data-analis.one');
 Route::get('/evalution-data', 'HomeController@evalData')->name('e-data');
 Route::get('/prediction-tambah', 'HomeController@tambahData')->name('tambah');
-Route::post('/prediction-import', 'HomeController@importData')->name('import');
+Route::post('/data-import', 'HomeController@importData')->name('import');
+Route::get('/data-export/{dt_type}', 'HomeController@exportData')->name('export');
+Route::get('/del-all-data-uji/{dt_type}', 'HomeController@destroyDtUji')->name('del-dtUji');
