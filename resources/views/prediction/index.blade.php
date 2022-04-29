@@ -118,7 +118,7 @@
                                             </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                             <label class="form-check-label">
                                                 <input name="5" value="2" type="radio" class="form-check-input" required="">Iya
-                                            </label>>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                             <label class="form-check-label">
                                                 <input name="5" value="3" type="radio" class="form-check-input" required="">Kadang-kadang
                                             </label>

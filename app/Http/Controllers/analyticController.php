@@ -26,7 +26,7 @@ class analyticController extends Controller
         return (view()->exists('prediction.matrix'))?view('prediction.matrix',$data):'';
     }
     public function evalDTPage(){
-        $data['data_eval']=DtEvals::all();
+        $data['data_eval']=DtEvals::all()->where('dt_type','testDT');
         $data['data_pred']=Prediction::leftJoin('dt_evals','dt_evals.no','=','pred_datas.no_data')
                             ->select('dt_evals.*','pred_datas.*')
                             ->where('dt_type','testDT')->get();
@@ -35,18 +35,49 @@ class analyticController extends Controller
         // $data['n_data']=Normalisasi::all();
         return (view()->exists('prediction.eval-data'))?view('prediction.eval-data',$data):'';
     }
+    public function evalDTLatihPage(){
+        $data['data_eval']=DtEvals::all()->where('dt_type','trainDT');
+        $data['data_pred']=Prediction::leftJoin('dt_evals','dt_evals.no','=','pred_datas.no_data')
+                            ->select('dt_evals.*','pred_datas.*')
+                            ->where('dt_type','trainDT')->get();
+                            // dd($data['data_pred']->first());
+        $data['question']=Question::all();
+        // $data['n_data']=Normalisasi::all();
+        return (view()->exists('dtlatih.eval-data'))?view('dtlatih.eval-data',$data):'';
+    }
     public function normalizeDTPage(){
         $dt_evals = new DtEvals;
         $ques = new Question;
         $norm =
-        Normalisasi::leftJoin('pred_datas','normalisasi.prediction_dt_id','=','pred_datas.id')->select('normalisasi.*','pred_datas.*')->get();
+        Normalisasi::leftJoin('pred_datas','normalisasi.prediction_dt_id','=','pred_datas.id')
+                ->leftJoin('dt_evals','dt_evals.no','=','pred_datas.no_data')
+                ->where('dt_type','testDT')
+                ->select('normalisasi.*','pred_datas.*')->get();
         $data['data_eval']=$dt_evals->where('dt_type','testDT')->get();
         $data['question']=$ques->get();
         $data['n_data']=$norm;
         $data['jml_dataBru']=$data['data_eval']->count()-($data['n_data']->count()/9);
-        $data['jmlDt'] = $dt_evals->count();
+        $data['jmlDt'] = $data['data_eval']->count();
+        // dd($data);
         
         return (view()->exists('prediction.n-data'))?view('prediction.n-data',$data):'';
+    }
+    public function normalizeDTLatihPage(){
+        $dt_evals = new DtEvals;
+        $ques = new Question;
+        $norm =
+        Normalisasi::leftJoin('pred_datas','normalisasi.prediction_dt_id','=','pred_datas.id')
+            ->leftJoin('dt_evals','dt_evals.no','=','pred_datas.no_data')
+            ->where('dt_type','trainDT')
+            ->select('normalisasi.*','pred_datas.*')->get();
+        $data['data_eval']=$dt_evals->where('dt_type','trainDT')->get();
+        $data['question']=$ques->get();
+        $data['n_data']=$norm;
+        $data['jml_dataBru']=$data['data_eval']->count()-($data['n_data']->count()/9);
+        $data['jmlDt'] = $data['data_eval']->count();
+        // dd($data['jml_dataBru']);
+        
+        return (view()->exists('dtlatih.n-data'))?view('dtlatih.n-data',$data):'';
     }
     public function createConfutionMatrix(){
         $dtEvals = DtEvals::all();        

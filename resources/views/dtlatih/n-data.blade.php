@@ -1,7 +1,7 @@
 @extends('layouts.admin')
-@section('mo-test-data','menu-open')
-@section('test-data','active')
-@section('n-test-data','active')
+@section('mo-data-latih','menu-open')
+@section('data-latih','active')
+@section('n-data-latih','active')
 @section('style')
 <style>
     .loading{
@@ -160,7 +160,7 @@
                 data:{
                     "_token": "{{ csrf_token() }}",
                     "aksi": "n-data",
-                    "dt_type":"testDT"
+                    "dt_type":"trainDT"
                     },
                 cache: false,
                 dataType: 'json',

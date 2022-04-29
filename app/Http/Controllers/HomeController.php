@@ -68,6 +68,13 @@ class HomeController extends Controller
         // $this->pred_controll->hitung(false, $data);
         return $this->analytic_controll->normalizeDTPage();
     }
+    public function normalizeDataLatih()
+    {
+        // $dist = new Distances;
+        // $dt_norm_arr = [];        
+        // $this->pred_controll->hitung(false, $data);
+        return $this->analytic_controll->normalizeDTLatihPage();
+    }
     public function analisDataOne(Request $req,$no_data){
         $dt_bru = $req->input('dt_bru')=='false'?false:true;
         // dd($req->input("progress")+1);
@@ -134,9 +141,13 @@ class HomeController extends Controller
     {
         return $this->analytic_controll->evalDTPage();
     }
+    public function evalDataLatih()
+    {
+        return $this->analytic_controll->evalDTLatihPage();
+    }
     public function tambahData()
     {
-        $data['jmlDt'] = $this->dt_evals->where('dt_type','testDT')->get()->count();
+        $data['jmlDt'] = $this->dt_evals->where('dt_type','trainDT')->get()->count();
         if(Session::get('stsImport')!=null){
             $data['stsImport'] = Session::get('stsImport');
             return view('prediction.admin-index', $data)->with(['stsImport'=>Session::get('stsImport')]);
@@ -148,14 +159,17 @@ class HomeController extends Controller
     public function destroyDtUji($dt_type){
         // dd($dt_type);
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        $del_evalsdDt = $this->dt_evals->where('dt_type',$dt_type);
-        Normalisasi::truncate();
-        foreach ($del_evalsdDt->get() as $key => $val) {
-            $del_predDt = $this->pred_dt->where('no_data',$val->no);
-            $del_predDt->delete();
-            // dd($del_predDt);
-        }
-        $del_evalsdDt->delete();
+        Normalisasi::leftJoin('pred_datas','normalisasi.prediction_dt_id','=','pred_datas.id')
+        ->leftJoin('dt_evals','dt_evals.no','=','pred_datas.no_data')
+        ->where('dt_type',$dt_type)->delete();
+        Prediction::leftJoin('dt_evals','dt_evals.no','=','pred_datas.no_data')
+        ->where('dt_type',$dt_type)->delete();
+        DtEvals::where('dt_type',$dt_type)->delete();
+        // foreach ($del_evalsdDt->get() as $key => $val) {
+        //     $del_predDt = $this->pred_dt->where('no_data',$val->no);
+        //     $del_predDt->delete();
+        //     // dd($del_predDt);
+        // }
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         $return['stsDel'] = true;
 
@@ -219,12 +233,13 @@ class HomeController extends Controller
 		$nama_file = 'dtImportTerbaru.'.$ext;
  
 		// upload ke folder file_siswa di dalam folder public
-		$file->move('file_dt_latih',$nama_file);
+        $dir = $dt_type =='testDT'?'file_dt_uji':'file_dt_latih';
+		$file->move($dir,$nama_file);
  
         $data['jmlDt'] = $this->pred_dt->get()->count();
         $data['sts_msg'] = true;
         $data['msg'] = "Sukses import data";
-        Excel::import(new ImportDTLatih,public_path('/file_dt_latih/'.$nama_file));
+        Excel::import(new ImportDTLatih,public_path('/'.$dir.'/'.$nama_file));
         
         $return = [];
         if($this->importDtToDb($dt_type)->count()>0){

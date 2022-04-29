@@ -217,7 +217,7 @@
                 <div class="form-group">
                   <input type="file"
                     class="form-control pt-3 pb-5" name="import-data" id="import-data" aria-describedby="desInput" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"multiple required>
-                    <input type="hidden" name="dt_type" value="testDT">
+                    <input type="hidden" name="dt_type" value="trainDT">
                   <small id="desInput" class="form-text text-muted">File excel yang diupload adalah format 97-2003 workbook (.xls) dan Microsoft Excel Worksheet(.xlsx)</small>
                 </div>
             </div>
@@ -245,8 +245,7 @@
             title: 'Sukses',
             text: 'Hasil prediksi anda adalah {{ (session()->get('jml_r') > session()->get('jml_b')?"Ringan":"Berat") }}',
             icon: 'success',
-            showConfirmButton: false,
-            timer : 1500
+            showConfirmButton: true,
         });
         @endif
         @if(session()->get('stsImport'))

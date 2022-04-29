@@ -77,7 +77,7 @@
                             <table class="mb-0 table table-bordered">
                                 <thead>
                                     <tr>
-                                        <th>Jumlah = {{ $data->count() }} </th>
+                                        <th>Jumlah = {{ $bb+$rb+$br+$rr }} </th>
                                         <th>Kelas Berat</th>
                                         <th>Kelas Ringan</th>
                                     </tr>

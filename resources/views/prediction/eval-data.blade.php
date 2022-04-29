@@ -1,7 +1,7 @@
 @extends('layouts.admin')
-@section('mo-eval-data','menu-open')
-@section('eval-data','active')
-@section('dt-uji','active')
+@section('mo-test-data','menu-open')
+@section('test-data','active')
+@section('e-test-data','active')
 
 @section('style')
 <style>
@@ -75,11 +75,12 @@
                 </h5>
                 <div class="aksi-hitung my-2">
                     
-                    <button class="btn-import btn btn-sm btn-success" role="button" data-toggle="modal" data-target="#import">Import</button>
-                    <a class="btn-export btn btn-sm btn-secondary" href="{{ route('export','testDT') }}" role="button">Export</a>
+                    <a class="btn btn-success btn-sm" href="{{ route('tambah') }}" role="button"><i class="fa fa-plus mr-1" aria-hidden="true"></i>Tambah</a>
+                    <button class="btn-import btn btn-sm btn-secondary" role="button" data-toggle="modal" data-target="#import"><i class="fa fa-upload mr-1" aria-hidden="true"></i>Import</button>
                     @if ($data_pred->count()!=0)
-                        <button  class="btn-delete-all btn btn-sm btn-danger" role="button" role="button" data-toggle="modal" data-target="#destroy">Hapus Semua Data</button>
-                        <button class="btn-hitung-knn btn btn-sm btn-primary" role="button">Hitung KNN</button>
+                    <a class="btn-export btn btn-sm btn-dark" href="{{ route('export','testDT') }}" role="button"><i class="fa fa-download mr-1" aria-hidden="true"></i>Export</a>
+                        <button  class="btn-delete-all btn btn-sm btn-danger" role="button" role="button" data-toggle="modal" data-target="#destroy"><i class="fa fa-trash mr-1" aria-hidden="true"></i>Hapus Semua Data</button>
+                        <button class="btn-hitung-knn btn btn-sm btn-primary" role="button"><i class="fa fa-calculator mr-1" aria-hidden="true"></i>Hitung KNN</button>
                         <button class="btn-hitung-knn-cus btn btn-sm btn-outline-info d-none" role="button">Hitung KNN(0)</button>
                     @endif
                 </div>
@@ -187,17 +188,17 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{ route('del-dtUji','testDT') }}" id="form-import" method="get" enctype="multipart/form-data">
+            <form action="{{ route('del-dtUji','testDT') }}" id="form-destroy" method="get" enctype="multipart/form-data">
                 @csrf
             <div class="modal-body bg-light">
                 <div class="form-group">
-                    <p>Semua data akan dihapus, anda yakin ingin melanjutkan??</p>
+                    <p>Semua data akan dihapus termasuk perhitungan normalisasi dari <b> Test Data </b>, anda yakin ingin melanjutkan??</p>
                     <input type="hidden" name="dt_type" value="testDT">
                     <small id="desInput" class="form-text text-danger"><strong>Peringatan : </strong>Data yang telah dihapus tidak akan bisa dikembalikan!!</small>
                 </div>
             </div>
             <div class="modal-footer bg-light">
-                <button id="btn-import" type="submit" class="btn btn-danger">Lanjutkan</button>
+                <button id="btn-destroy" type="submit" class="btn btn-danger">Lanjutkan</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
             </div>
             </form>
@@ -218,6 +219,16 @@
         $('#progress').hide();
         $('.btn-hitung-knn-cus').hide();
         $('.btn-hitung-knn-cus').removeClass('d-none');
+        $('#form-import').submit(function(e){
+            // e.preventDefault();
+            $('#btn-import').attr('disabled',true);
+            $('#import').modal('hide');
+        });
+        $('#form-destroy').submit(function(e){
+            // e.preventDefault();
+            $('#btn-destroy').attr('disabled',true);
+            $('#destroy').modal('hide');
+        });
         if (dt_end!=0){
             $('#pageLoading').addClass("show");
             $('#pageLoading').show();

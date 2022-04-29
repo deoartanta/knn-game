@@ -56,17 +56,20 @@ class PredictionController extends Controller
         $analyticControl = new analyticController;
         $db_dt_evals = new DtEvals;
         $prediction = new Prediction;
-        $dt_evals = $db_dt_evals->get();
-        $no_data = ($dt_evals->count()+1);
-
+        $no_data = ($db_dt_evals->count()+1);
+        $dt_evals = $db_dt_evals->where('dt_type','trainDT')->get();
+// dd($dt_evals->count());
         $jml_qu = Question::all()->count();
 
         $jmlD_ringan= $dt_evals->where('kelas','0')->count();
         $jmlD_berat= $dt_evals->where('kelas','1')->count();
         $jml_k_tmp = ($jmlD_ringan<$jmlD_berat?$jmlD_ringan:$jmlD_berat);
-        $jml_k = ((($jml_k_tmp>3?$jml_k_tmp/2:$jml_k_tmp)%2)==0?($jml_k_tmp+1):$jml_k_tmp);
+        $jml_k_tmp=$jml_k_tmp%2==0?$jml_k_tmp:$jml_k_tmp-1;
+        $jml_k_tmp = ($jml_k_tmp>3?$jml_k_tmp/2:$jml_k_tmp);
+        $jml_k=(($jml_k_tmp%2)==0?($jml_k_tmp+1):$jml_k_tmp);
         
         $db_dt_evals->no = $no_data;
+        $db_dt_evals->dt_type = "testDTbru";
         $db_dt_evals->save();        
         $up_dt_evals = DtEvals::where('jml_k','<>','-1')->update(['jml_k'=>$jml_k]);
         
@@ -83,7 +86,8 @@ class PredictionController extends Controller
             $i++;
         }
         $prediction->insert($keyall);
-        $pred_dt = $this->normalisasi($dt_evals,$prediction->get());
+        $pred_dt = $this->normalisasi($dt_evals,Prediction::leftJoin('dt_evals', 'dt_evals.no', 
+        'pred_datas.no_data'));
         $dist = $this->hitung(true,$dt_evals);
 
         $no = 0;
@@ -105,6 +109,7 @@ class PredictionController extends Controller
 
         $db_dt_evals->kelas = $jml_r<$jml_b?1:0;
         $db_dt_evals->jml_k = $jml_k;
+        $db_dt_evals->dt_type = "testDT";
         $db_dt_evals->save();
 
         return redirect()->back()->with([
@@ -140,22 +145,37 @@ class PredictionController extends Controller
         $dt_hsl_akar = 0;
         $dist_add = [];
         $dist_all_arr = [];
-        $arrNewDt = $data;
+        $arrNewDt = [];
+        // dd($data);
+        foreach ($data as $key => $val) {
+            $arrNewDt[$val->qu_id]['id'] = $val->id;
+            $arrNewDt[$val->qu_id]['no'] = $val->no_data;
+        }
         if($dt_bru){
             // dd($arrNewDt);
-            $dt_evals = Prediction::leftJoin('dt_evals','dt_evals.no','pred_datas.no_data')->select('dt_evals.id as id_eval','pred_datas.id as id_pred','pred_datas.no_data as no_pred','dt_evals.no as no_eval','dt_evals.kelas','dt_evals.kelas_prediksi','dt_evals.jml_k','pred_datas.qu_id','pred_datas.value')->get();
+            $dt_evals = Prediction::leftJoin('dt_evals','dt_evals.no','pred_datas.no_data')
+                ->where('dt_type','trainDT')->orwhere('dt_type','testDTbru')
+                ->select('dt_evals.id as id_eval','pred_datas.id as id_pred','pred_datas.no_data as no_pred','dt_evals.no as no_eval','dt_evals.kelas','dt_evals.kelas_prediksi','dt_evals.jml_k','pred_datas.qu_id','pred_datas.value')->get();
             $dt_norm =
-            Normalisasi::leftJoin('pred_datas','pred_datas.id','normalisasi.prediction_dt_id')->select('normalisasi.val_normalisasi as val_norm','normalisasi.prediction_dt_id as id_pred')->get();
+            Normalisasi::leftJoin('pred_datas','pred_datas.id','normalisasi.prediction_dt_id')
+            ->leftJoin('dt_evals','dt_evals.no','=','pred_datas.no_data')
+            ->where('dt_type','trainDT')->orwhere('dt_type','testDTbru')
+            ->select('normalisasi.val_normalisasi as val_norm','normalisasi.prediction_dt_id
+            as id_pred')->get();
+            // dd($dt_evals);
+            // dd($dt_norm);
             foreach ($dt_norm as $key => $val) {
                 $dt_norm_arr[$val->id_pred] = [
                     'id'=>$val->id_pred,
                     'val'=>$val->val_norm,
                 ];
+                // echo $val->id_pred;
             };
+            // dd($dt_norm->count());
             $dist->truncate();
             foreach ($dt_evals as $ev) {
-                if($ev->no_eval!=$arrNewDt->no_data){
-                        $dt_hsl_kurang = $dt_norm_arr[$ev->id_pred]['val']-$dt_norm_arr[$arrNewDt->id]['val'];
+                if($ev->no_eval!=$arrNewDt[$ev->qu_id]['no']){
+                        $dt_hsl_kurang = $dt_norm_arr[$ev->id_pred]['val']-$dt_norm_arr[$arrNewDt[$ev->qu_id]['id']]['val'];
                         $dt_hsl_jml =$dt_hsl_jml + pow($dt_hsl_kurang,2);
                         // echo $dt_norm_arr[$ev->id_pred]['val']."-".$dt_norm_arr[$arrNewDt->id]['val'] ."=".($dt_norm_arr[$ev->id_pred]['val']-$dt_norm_arr[$arrNewDt->id]['val']);
                         // echo $dt_hsl_jml.";";
@@ -213,18 +233,18 @@ class PredictionController extends Controller
     }
     public function hitung($new_dt,$data){
         $return =null;
-        $pred_dt = new Prediction;
         // $dt_evals = $data['dt_evals'];
         // $norm_all = Normalisasi::all();
         // $dt_eval_all = new DtEvals;
         // $dt_eval_add = [];
         // $dt_eval_all_arr = [];
-
+        
         // $dist = new Distances;
         if ($new_dt==true){
-            $data['dt_new'] = $pred_dt->get()->last();
+            $data['dt_new'] =Prediction::leftJoin('dt_evals','dt_evals.no','pred_datas.no_data')->where('dt_type','testDTbru')->select('pred_datas.*')->get();
             
             $return = $this->createKelas($data['dt_new'],$new_dt);
+            // dd($data['dt_new']);
         }else{
             // $hsl_hitung_dt=0;
                 // $i = 1;
@@ -376,16 +396,24 @@ class PredictionController extends Controller
         return $return;
     }
 
-    public function  normalisasi($dt_evals,$prediction){
+    public function  normalisasi($dt_evals,$pred){
         Normalisasi::truncate();
         $jml_dt = 0;
         $norm_add = [];
         $norm_all_arr = [];
         $nor = new Normalisasi;
+        $prediction = $pred->where('dt_type','trainDT')
+        ->orwhere('dt_type','testDTbru')->select('pred_datas.*')->get();
+        // $dt_bru = $pred->where('dt_type','testDTbru');
         $dt_pred_vall_arr =[];
         foreach ($prediction as $key => $val) {
             $dt_pred_vall_arr[$val->qu_id][$val->id] = $val->value;
         }
+        // dd($dt_pred_vall_arr);
+        // dd($dt_pred_vall_arr);
+        // foreach ($dt_bru as $key => $val) {
+        //     $dt_pred_vall_arr[$val->qu_id][$val->id] = $val->value;
+        // }
         foreach ($prediction as $key => $val) {
             $pred_max = max($dt_pred_vall_arr[$val->qu_id]);
             $pred_min = min($dt_pred_vall_arr[$val->qu_id]);

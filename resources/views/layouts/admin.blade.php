@@ -112,7 +112,7 @@
             <li class="nav-item has-treeview @yield('mo-prediction')">
               <!--menu-open -->
               <a href="#" class="nav-link @yield('prediction')">
-                <i class="nav-icon fa fa-calculator"></i>
+                <i class="fa fa-star" aria-hidden="true"></i>
                 <p>
                   Prediction
                   <i class="right fas fa-angle-left"></i>
@@ -134,31 +134,55 @@
                 <li class="nav-item">
                   <a href="{{ route('n-data') }}" class="nav-link @yield('n-data')">
                     <i class="far fa-circle nav-icon"></i>
-                    <p>Normalize Data</p>
+                    <p>Euclidean Distance</p>
                   </a>
                 </li>
               </ul>
             </li>
-            <li class="nav-item has-treeview @yield('mo-eval-data')">
+            <li class="nav-item has-treeview @yield('mo-data-latih')">
               <!--menu-open -->
-              <a href="#" class="nav-link @yield('eval-data')">
-                <i class="nav-icon fa fa-calculator"></i>
+              <a href="#" class="nav-link @yield('data-latih')">
+                <i class="fa fa-database" aria-hidden="true"></i>
                 <p>
-                  Evaluation Data
+                  Training Data
                   <i class="right fas fa-angle-left"></i>
                 </p>
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="{{ route('n-data') }}" class="nav-link @yield('dt-latih')">
+                  <a href="{{ route('e-data-latih') }}" class="nav-link @yield('e-data-latih')">
                     <i class="far fa-circle nav-icon"></i>
-                    <p>Training Data</p>
+                    <p>Evaluation Data</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="{{ route('e-data') }}" class="nav-link @yield('dt-uji')">
+                  <a href="{{ route('n-data-latih') }}" class="nav-link @yield('n-data-latih')">
                     <i class="far fa-circle nav-icon"></i>
-                    <p>Test Data</p>
+                    <p>Normalisasi</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item has-treeview @yield('mo-test-data')">
+              <!--menu-open -->
+              <a href="#" class="nav-link @yield('test-data')">
+                <i class="fa fa-server" aria-hidden="true"></i>
+                <p>
+                  Test Data
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{{ route('e-data') }}" class="nav-link @yield('e-test-data')">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Evaluation Data</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{ route('n-data') }}" class="nav-link @yield('n-test-data')">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Normalisasi</p>
                   </a>
                 </li>
               </ul>
@@ -204,7 +228,7 @@
     </div>
     <!-- /.content-wrapper -->
     <footer class="main-footer">
-      <strong>Copyright &copy; 2014-2019 <a href="http://adminlte.io">AdminLTE.io</a>.</strong>
+      <strong>Copyright &copy; 2022 <a href="#">Company</a>.</strong>
       All rights reserved.
       <div class="float-right d-none d-sm-inline-block">
         <b>Version</b> 3.0.0-beta.2
