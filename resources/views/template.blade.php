@@ -36,11 +36,11 @@
 			<div class="collapse navbar-collapse" id="navbarNavDropdown">
 				<ul class="navbar-nav justify-content-center w-100">
 					<li class="nav-item">
-						<a class="nav-link s-o-white text-uppercase js-scroll-trigger" href="#home" style="font-weight: 600;">Home <span class="sr-only">(current)</span></a>
+						<a class="nav-link s-o-white text-uppercase js-scroll-trigger" href="#home" style="font-weight: 600;"><i class="fa fa-home mr-1" aria-hidden="true"></i>Home <span class="sr-only">(current)</span></a>
 					</li>
 
 					<li class="nav-item">
-						<a class="nav-link s-o-white text-uppercase" style="font-weight: 600;" href="#about">About</a>
+						<a class="nav-link s-o-white text-uppercase" style="font-weight: 600;" href="#panduan"><i class="fas fa-book-open mr-1"></i>Panduan</a>
 					</li>
 
 					<!-- <li class="nav-item">
@@ -77,7 +77,7 @@
 				<ul class="navbar-nav">
 					<li class="nav-item dropdown">
 						<a class="nav-link s-o-white dropdown-toggle text-uppercase" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							{{ Auth::user()->name }}
+							<i class="fa fa-user mr-1" aria-hidden="true"></i>{{ Auth::user()->name }}
 						</a>
 						<div class="dropdown-menu dropdown-menu-lg-right bg-transparent" style="border: 0;" aria-labelledby="navbarDropdownMenuLink">
 							<div class="card mr-2 ml-2" style="width: 18rem;">

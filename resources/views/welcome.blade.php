@@ -17,14 +17,55 @@
     </div>
     <div class="bg-flip">
         <div class="container pt-4">
-            <div class="card shadow-sm mb-3" id="about">
-                <div class="card-body">
-                    <h5 class="card-title text-uppercase text-center">about</h5>
+            <div class="card shadow-sm mb-3" id="panduan">
+                <div class="card-body bg-light">
+                    <h5 class="card-title text-uppercase text-center">Panduan</h5>
                     <div class="card mb-3 border-0">
                         <div class="row no-gutters">
                             <div class="col-md-12">
-                                <div class="card-body">
-                                    <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsum neque ad, excepturi beatae voluptate explicabo facere magni? Quo explicabo asperiores quaerat vero ab eaque? Consequuntur eos neque molestiae ea molestias?Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia excepturi rerum praesentium, ipsam sapiente natus aspernatur, harum officiis animi debitis minima assumenda in architecto nesciunt ea veniam doloremque! Amet, sit?Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem, numquam sunt exercitationem nobis illum maxime quod vero delectus eaque ipsam doloribus enim praesentium laboriosam nisi, accusantium nostrum hic ullam fugiat.</p>
+                                <div class="card-body bg-light">
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="main-card mb-3 card">
+                                                <div class="card-body"><h5 class="card-title">Persiapan Data</h5>
+                                                    <p>Persiapan ini digunakan untuk menjawab pertanyaan-pertanyaan yang diperlukan dalam melakukan prediksi tingkat bermain game pada anak menggunakan algoritma k-NN </p>
+
+                                                    {{-- <p><span class="badge badge-success">1</span> Persiapkan Nilai <b>Jumlah MK Semester 1-4  </b> dan <b>Jumlah SKS 1-4</b></p>
+
+                                                    <p><span class="badge badge-success">2</span> Persiapkan Nilai <b>IP Semester 1 - 4 </b></p> --}}
+
+                                                    <p><span class="badge badge-success">1</span> Keterangan angka desimal <b>,(koma) </b> diganti <b>. (titik)</b></p>
+                                                </div>
+                                            </div>
+                                            <div class="main-card mb-3 card">
+                                                <div class="card-body"><h5 class="card-title">Large Scrollable Area</h5>
+                                                    <p>Ini adalah hasil dimana data yang kamu masukkan sudah diklasifikasikan menggunakan algoritma k-NN</p>
+                                                    <p><span class="badge badge-warning">4</span> Hasil <b>Prediksi</b> Berupa Tingkat Bermain yang <span class="badge badge-success">RINGAN</span> dan <span class="badge badge-danger">BERAT</span></p>
+                                                    <p><span class="badge badge-warning">5</span> Jika sudah melakukan <i>Prediksi</i> Tekan tombol <b>OK</b></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="main-card mb-3 card">
+                                                <div class="card-body"><h5 class="card-title">Prediction</h5>
+                                                    <p>Jika sudah mempersiapkan data, langkah selanjutnya adalah melakukan prediksi tingkat bermain game yang dianalisis menggunakan algoritma k-NN</p>
+                                                    <p><span class="badge badge-info">2</span> Lakukan <b>Prediksi</b> dengan menekan tombo <b>MULAI PREDIKSI</b> </p>
+                                                    <p><span class="badge badge-info">3</span> Isi <b><i> Form Prediksi </i></b> Sesuai Data Yang Telah Ada</p>
+                                                </div>
+                                            </div>
+                                                <div class="main-card mb-3 card">
+                                                    <div class="card-body"><h5 class="card-title">Ketentuan Sistem</h5>
+                                                        {{-- <p><span class="badge badge-info"></span> Menu <b>Analytic</b> hanya akan menampilkan data <i>confusion matrix</i> setelah melakukan <b>PREDIKSI</b></p> --}}
+
+                                                        <p><span class="badge badge-info">6</span> Hasil Prediksi ditentukan dengan menggunakan Algoritma <i>k-NN</i> </p>
+
+                                                        <p><span class="badge badge-info">7</span> Apabila Halaman <b>Prediksi</b> tidak bisa di buka atau ada kendala lain yang membuat prediksi anda belum bisa dilakukan. Silahkan Hub.  <i>Administrator</i> </p>
+
+                                                        {{-- <p><span class="badge badge-info">8</span> Kontak Admin (085784808281), E-mail = <i>abdoel.muiz27@gmail.com</i></p> --}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -34,19 +75,6 @@
         </div>
     </div>
 
-    <section class="footer bg-primary">
-        <div class="container">
-            <div class="row" id="contact">
-                <div class="col-6">
-                    no : 085234123312
-                </div>
-                <div class="col-6">
-                    alamat : jl. gondosari
-                </div>
-            </div>
-            <div id="pesan"></div>
-        </div>
-    </section>
 </div>
 
 @endsection
