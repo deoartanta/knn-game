@@ -86,8 +86,13 @@ class PredictionController extends Controller
             $i++;
         }
         $prediction->insert($keyall);
-        $pred_dt = $this->normalisasi($dt_evals,Prediction::leftJoin('dt_evals', 'dt_evals.no', 
-        'pred_datas.no_data'));
+        
+        $pred_dt = $this->normalisasi(
+            $dt_evals,
+            Prediction::leftJoin('dt_evals', 'dt_evals.no', 
+            'pred_datas.no_data')->where('dt_type','trainDT')
+            ->orwhere('dt_type','testDTbru')->select('pred_datas.*')->get()
+        );
         $dist = $this->hitung(true,$dt_evals);
 
         $no = 0;
@@ -396,14 +401,12 @@ class PredictionController extends Controller
         return $return;
     }
 
-    public function  normalisasi($dt_evals,$pred){
+    public function normalisasi($dt_evals,$prediction){
         Normalisasi::truncate();
         $jml_dt = 0;
         $norm_add = [];
         $norm_all_arr = [];
         $nor = new Normalisasi;
-        $prediction = $pred->where('dt_type','trainDT')
-        ->orwhere('dt_type','testDTbru')->select('pred_datas.*')->get();
         // $dt_bru = $pred->where('dt_type','testDTbru');
         $dt_pred_vall_arr =[];
         foreach ($prediction as $key => $val) {

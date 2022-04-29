@@ -234,7 +234,7 @@ class HomeController extends Controller
  
 		// upload ke folder file_siswa di dalam folder public
         $dir = $dt_type =='testDT'?'file_dt_uji':'file_dt_latih';
-		$file->move($dir,$nama_file);
+		$file->move($dir,$nama_file); 
  
         $data['jmlDt'] = $this->pred_dt->get()->count();
         $data['sts_msg'] = true;
