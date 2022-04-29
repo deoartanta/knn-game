@@ -103,10 +103,12 @@ class analyticController extends Controller
                 }
             }
         }
+        $jumlah_uji = $bb+$rr+$rb+$br;
+        // dd($jumlah_uji);
         if ($dtEvals->count()>0) {
             $berat = $bb+$rr;
             $tidak_Berat = $br+$rb+$kk;
-            $jumlah_uji = $dtEvals->count();
+            // $jumlah_uji = $dtEvals->count();
 
             $F_Rate = ($tidak_Berat/($jumlah_uji==0?1:$jumlah_uji))*100;
             $F_Rate     = round($F_Rate,2);

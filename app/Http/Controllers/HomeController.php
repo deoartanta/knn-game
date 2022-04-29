@@ -95,6 +95,7 @@ class HomeController extends Controller
                             ->where('kelas_prediksi','<>','0')
                             ->where('kelas_prediksi',null)
                             ->where('dt_type',$data['dt_type']);
+            $jml_dt = $data['DtEvals']->count();
             $data['no_data_next'] = $data['DtEvals']->count()!=0?$data['DtEvals']->first()->no:$jml_dt+1;
             $data['progress_max'] = $req->input("progress_max");
             $data['no_data'] = $data['no_data_next'];

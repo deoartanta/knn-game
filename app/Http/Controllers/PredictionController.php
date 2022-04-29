@@ -150,13 +150,13 @@ class PredictionController extends Controller
         $dt_hsl_akar = 0;
         $dist_add = [];
         $dist_all_arr = [];
-        $arrNewDt = [];
         // dd($data);
-        foreach ($data as $key => $val) {
-            $arrNewDt[$val->qu_id]['id'] = $val->id;
-            $arrNewDt[$val->qu_id]['no'] = $val->no_data;
-        }
         if($dt_bru){
+            $arrNewDt = [];
+            foreach ($data as $key => $val) {
+                $arrNewDt[$val->qu_id]['id'] = $val->id;
+                $arrNewDt[$val->qu_id]['no'] = $val->no_data;
+            }
             // dd($arrNewDt);
             $dt_evals = Prediction::leftJoin('dt_evals','dt_evals.no','pred_datas.no_data')
                 ->where('dt_type','trainDT')->orwhere('dt_type','testDTbru')
@@ -203,6 +203,7 @@ class PredictionController extends Controller
             // dd(Distances::orderBy('nilai', 'ASC')->get());
         }else{
             $dist->truncate();
+            $arrNewDt = $data;
             $dt_evals = $arrNewDt['dt_evals'];
             foreach ($dt_evals as $ev) {
                 if($ev->no_eval!=$arrNewDt['dt_hitung_kelas_prediksi']->no_eval){

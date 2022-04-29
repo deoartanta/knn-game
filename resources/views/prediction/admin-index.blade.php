@@ -58,6 +58,14 @@
 
                             {{-- Question --}}
                             @if($jmlDt!=0)
+                            <div class="row form-group">
+                                <label class="col-sm-6" for="k">Masukan Nilai K</label>
+                                <div class="col-sm-6">
+                                    <input type="number"
+                                        class="form-control" name="k" id="k" aria-describedby="helpk" placeholder="Masukan Nilai K">
+                                    <small id="helpk" class="form-text text-muted">Nilai K yang disarankan adalah bilangan ganjil.</small>
+                                </div>
+                            </div>
                                 <h5 class="card-title">(*) Wajib Diisi</h5>
                                 <form method="POST" id="addP" action="{{ route('prediction.store') }}" enctype="multipart/form-data">
                                     <div class="position-relative row form-group">
