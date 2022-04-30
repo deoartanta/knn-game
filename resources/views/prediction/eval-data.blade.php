@@ -91,12 +91,13 @@
                 <table class="table table-search table-striped table-inverse">
                     <thead class="thead-inverse">
                         <tr>
-                            <th>#</th>
+                            <th class="text-center">#</th>
                             @foreach ($question as $q)
-                            <th>Q{{ $q->id }}</th>
+                            <th class="text-center">Q{{ $q->id }}</th>
                             @endforeach
-                            <th>Kelas</th>
-                            <th>Kelas Prediksi</th>
+                            <th class="text-center">Kelas</th>
+                            <th class="text-center">Nilai K</th>
+                            <th class="text-center">Kelas Prediksi</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -122,6 +123,7 @@
                                     @endphp
                                     @if ($i>8)
                                         <td scope="row">{{ ($val->kelas==0)?"Ringan":(($val->kelas==1)?"Berat":"Belum Diprediksi") }}</td>
+                                        <td scope="row">{{ $val->jml_k }}</td>
                                         <td scope="row" class="kelas-prediksi">{{ 
                                         ($val->kelas_prediksi!==null)?(($val->kelas_prediksi==0)?"Ringan":"Berat"):"Belum Diprediksi"
                                         }}</td>
@@ -453,6 +455,7 @@
         }
         function h_data(k,no_data_next,type,progress,progress_max){
             var jml_dt = '{{ $data_eval->count() }}';
+            // alert(k);
             $.ajax({
                 type: "POST",
                 url: "{{ route('n-data-analis') }}/"+no_data_next,

@@ -54,6 +54,7 @@
                         <div class="card-body">
                             <h5 class="card-title">(*) Wajib Diisi</h5>
                             <form method="POST" action="{{ route('prediction.store') }}" enctype="multipart/form-data">
+                                <input type="hidden" name="k" value="{{ $k }}">
                                 <div class="position-relative row form-group">
                                     <label for="radio2" class="col-sm-6 col-form-label">Bermain Game Setiap Hari (*)</label>
                                     <div class="col-sm-6">

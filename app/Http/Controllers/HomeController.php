@@ -84,6 +84,7 @@ class HomeController extends Controller
         // return $data['k'];
         $data['type'] = $req->input('type');
         $data['dt_type'] = $req->input('dt_type');
+        $data['progress'] = $req->input("progress");
         if($data['type']=="all"){
             $hsl = $this->pred_controll->hitung($dt_bru, $data);
             $data['DtEvals'] = DtEvals::all()->where('dt_type',$data['dt_type']);
@@ -148,7 +149,14 @@ class HomeController extends Controller
     }
     public function tambahData()
     {
+        $dt_evals = DtEvals::all()->where('dt_type','testDT');
+        $data['k'] = null;
         $data['jmlDt'] = $this->dt_evals->where('dt_type','trainDT')->get()->count();
+        if ($dt_evals->count()!=0) {
+            $data['k'] = $dt_evals->last()->jml_k;
+        }
+        // dd($data['k']);
+        // dd($dt_evals);
         if(Session::get('stsImport')!=null){
             $data['stsImport'] = Session::get('stsImport');
             return view('prediction.admin-index', $data)->with(['stsImport'=>Session::get('stsImport')]);

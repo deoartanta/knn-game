@@ -20,12 +20,15 @@ class PredictionController extends Controller
      */
     public function index()
     {
-        $db_dt_evals = new DtEvals;
-        $prediction = new Prediction;
-        $dt_evals = $db_dt_evals->get();
+        $prediction = Prediction::leftJoin('dt_evals', 'dt_evals.no','pred_datas.no_data')
+                            ->where('dt_type','trainDT')->select('pred_datas.*');
+        $dt_evals = DtEvals::all()->where('dt_type','testDT');
         $data['jmlDt'] = $prediction->get()->count();
-        // return $this->hitung(90);
-        // return $dt_evals;
+        if ($dt_evals->count()!=0) {
+            $data['k'] = $dt_evals->last()->jml_k;
+        }else{
+            $data['k'] =null;
+        }
        return ((view()->exists('prediction.index'))?view('prediction.index',$data):'');
     }
 
@@ -39,6 +42,7 @@ class PredictionController extends Controller
         // $db_dt_evals = new DtEvals;
         // $dt_evals = $db_dt_evals->get();
         // return $dt_evals;
+        
         return ((view()->exists('prediction.index'))?view('prediction.index'):'');
     }
 
@@ -59,26 +63,36 @@ class PredictionController extends Controller
         $no_data = ($db_dt_evals->count()+1);
         $dt_evals = $db_dt_evals->where('dt_type','trainDT')->get();
 // dd($dt_evals->count());
-        $jml_qu = Question::all()->count();
+        $ques = Question::all();
+        $jml_qu = $ques->count();
 
         $jmlD_ringan= $dt_evals->where('kelas','0')->count();
         $jmlD_berat= $dt_evals->where('kelas','1')->count();
+
         $jml_k_tmp = ($jmlD_ringan<$jmlD_berat?$jmlD_ringan:$jmlD_berat);
         $jml_k_tmp=$jml_k_tmp%2==0?$jml_k_tmp:$jml_k_tmp-1;
         $jml_k_tmp = ($jml_k_tmp>3?$jml_k_tmp/2:$jml_k_tmp);
-        $jml_k=(($jml_k_tmp%2)==0?($jml_k_tmp+1):$jml_k_tmp);
-        
+        if($request->input('k')!=null){
+            $jml_k = $request->input('k');
+        }else{
+            $jml_k=(($jml_k_tmp%2)==0?($jml_k_tmp+1):$jml_k_tmp);
+        }
+
         $db_dt_evals->no = $no_data;
         $db_dt_evals->dt_type = "testDTbru";
+        $db_dt_evals->jml_k = $jml_k;
         $db_dt_evals->save();        
-        $up_dt_evals = DtEvals::where('jml_k','<>','-1')->update(['jml_k'=>$jml_k]);
+        // $up_dt_evals = DtEvals::where('jml_k','testDTbru')->update(['jml_k'=>$jml_k]);
         
-        
-        foreach ($request->all() as $key => $value) {
-                if ($i<$jml_qu) {    
-                        $keyadd['qu_id']= $i+1;
-                        $keyadd['no_data']= $no_data;
-                        $keyadd['value']= $value;
+        $idQuesArr = [];
+        foreach ($ques as $key => $val) {
+            $idQuesArr[$key] = $val->id;
+        }
+        foreach ($request->except('_token','k') as $key => $value) {
+            if ($i<$jml_qu) {    
+                $keyadd['qu_id']= $idQuesArr[$i];
+                $keyadd['no_data']= $no_data;
+                $keyadd['value']= $value;
                 $keyall [$i]=$keyadd;
 
             }
@@ -127,17 +141,22 @@ class PredictionController extends Controller
     public function create_jmlK($k){
         $db_dt_evals = new DtEvals;
         $dt_evals = $db_dt_evals->get();
+        // dd($k);
         // dd($dt_evals->last()->jml_k===null);
-        // if($dt_evals->last()->jml_k===null){
+        // echo $k;
+        if($k===null){
             $jmlD_ringan= $dt_evals->where('kelas','0')->count();
             $jmlD_berat= $dt_evals->where('kelas','1')->count();
             $jml_k_tmp = ($jmlD_ringan<$jmlD_berat?$jmlD_ringan:$jmlD_berat); 
             $jml_k_tmp = $jml_k_tmp%2==0?$jml_k_tmp:$jml_k_tmp-1;
             $jml_k_tmp = ($jml_k_tmp>3?$jml_k_tmp/2:$jml_k_tmp);
             $jml_k=(($jml_k_tmp%2)==0?($jml_k_tmp+1):$jml_k_tmp);
-            $up_dt_evals = DtEvals::where('kelas','<>',null)->update(['jml_k'=>($k!=null?$k:$jml_k)]);
+            // dd("null");
+            $up_dt_evals = DtEvals::where('dt_type','testDT')->update(['jml_k'=>$jml_k]);
             // dd($jml_k);
-        // }
+        }else{
+            $up_dt_evals = DtEvals::where('dt_type','testDT')->update(['jml_k'=>$k]);
+        }
     }
     public function createKelas($data,$dt_bru){
         $dist = new Distances;
@@ -249,8 +268,8 @@ class PredictionController extends Controller
         if ($new_dt==true){
             $data['dt_new'] =Prediction::leftJoin('dt_evals','dt_evals.no','pred_datas.no_data')->where('dt_type','testDTbru')->select('pred_datas.*')->get();
             
-            $return = $this->createKelas($data['dt_new'],$new_dt);
             // dd($data['dt_new']);
+            $return = $this->createKelas($data['dt_new'],$new_dt);
         }else{
             // $hsl_hitung_dt=0;
                 // $i = 1;
@@ -302,17 +321,17 @@ class PredictionController extends Controller
                 $jml_pred_dt =$pred_dt->get()->count();
                 $pred_all_dt = $pred_dt->get();
                 $data['sts'] = true;
-                if ($data['no_data']==1) {
-                    $this->create_jmlK($data['k']);
+                $this->create_jmlK($data['k']);
+                if ($data['progress']==1) {
                     $jml_norm = Normalisasi::all()->count();
                     $jml_pred_dt =$pred_dt->count();
-                    if($jml_norm!=$jml_pred_dt){
-                        $data['sts'] = false;
-                        $data['msg'] = "Ada data baru yang belum dinormalisasikan!!";
-                        return $data;
-                    }else{
-                        $data['sts'] = true;
-                    }
+                    // if($jml_norm!=$jml_pred_dt){
+                    //     $data['sts'] = false;
+                    //     $data['msg'] = "Ada data baru yang belum dinormalisasikan!!";
+                    //     return $data;
+                    // }else{
+                    //     $data['sts'] = true;
+                    // }
                 }
                 foreach ($pred_dt->where('no',$data['no_data'])->get() as $key => $val) {
                     $data['dt_hitung_kelas_prediksi'] = $val;
