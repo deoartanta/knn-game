@@ -66,7 +66,7 @@
 
                         <p><span class="badge badge-success">1</span> Persiapkan data di menu <span class="badge badge-primary"><i class="fa fa-database mr-1" aria-hidden="true"></i>Training Data</span>  kemudian pilih submenu <b>Evaluation Data</b>, atau langsung menekan tombol <span class="badge badge-success"><i class="fa fa-upload mr-1" aria-hidden="true"> Import</i></span> di submenu <b> Tambah </b> pada menu <span class="badge badge-info"><i class="fa fa-star mr-1" aria-hidden="true"></i>Prediction</span> (<span class="text-danger"><strong>Catatan : </strong>tombol import tersebut akan tampil jika belum ada <i>Training Data</i> yang ditambahkan</span>)</p>
 
-                        <p><span class="badge badge-success">2</span> Lakukan impor data berupa <i>Excel</i> sesuai templat yang di unduh pada tombol <span class="badge badge-success"><i class="fa fa-upload" aria-hidden="true"> Import</i></span> Dan Jangan Lupa <i>Unduh Template Excelnya Terlebih Dahulu</i></p>
+                        <p><span class="badge badge-success">2</span> Lakukan impor data berupa <i>Excel</i> sesuai template yang di unduh pada tombol <span class="badge badge-success"><i class="fa fa-upload" aria-hidden="true"> Import</i></span> Dan Jangan Lupa <i>Unduh Template Excelnya Terlebih Dahulu</i></p>
 
                         <p><span class="badge badge-success">3</span> Selanjutnya lakukan perhitungan di submenu <b> Normalisasi data </b> pada menu <span class="badge badge-info"><i class="fa fa-star mr-1" aria-hidden="true"></i>Prediction</span></p>
 

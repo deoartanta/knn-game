@@ -36,7 +36,7 @@
                             <form action="{{ route('set-k') }}" method="get">
                                 <div class="mt-3 row form-group">
                                     <div class="col-12 input-group">
-                                        <label class="pr-5 input-group-text text-left">Masukan Nilai K</label>
+                                        <label class="pr-5 input-group-text text-left">Masukkan Nilai K</label>
                                         <input type="number"
                                         class="form-control" name="k" id="k" aria-describedby="helpk" placeholder="Masukan Nilai K" value="{{ $k }}">
                                         {{-- <span class="input-group-text"> --}}

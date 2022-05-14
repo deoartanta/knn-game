@@ -28,20 +28,23 @@
                                         <div class="col-lg-6">
                                             <div class="main-card mb-3 card">
                                                 <div class="card-body"><h5 class="card-title">Persiapan Data</h5>
-                                                    <p>Persiapan ini digunakan untuk menjawab pertanyaan-pertanyaan yang diperlukan dalam melakukan prediksi tingkat bermain game pada anak menggunakan algoritma k-NN </p>
+                                                    <p>Persiapan ini adalah tahap awal untuk melakukan klasifikasi menggunakan algoritma k-NN, yaitu persiapan <i> Training Data </i> dan <i> Normalisasi Training Data </i> </p>
 
-                                                    {{-- <p><span class="badge badge-success">1</span> Persiapkan Nilai <b>Jumlah MK Semester 1-4  </b> dan <b>Jumlah SKS 1-4</b></p>
+                                                    <p><span class="badge badge-success">1</span> Persiapkan data di menu <span class="badge badge-primary"><i class="fa fa-database mr-1" aria-hidden="true"></i>Training Data</span>  kemudian pilih submenu <b>Evaluation Data</b>, atau langsung menekan tombol <span class="badge badge-success"><i class="fa fa-upload mr-1" aria-hidden="true"> Import</i></span> di submenu <b> Tambah </b> pada menu <span class="badge badge-info"><i class="fa fa-star mr-1" aria-hidden="true"></i>Prediction</span> (<span class="text-danger"><strong>Catatan : </strong>tombol import tersebut akan tampil jika belum ada <i>Training Data</i> yang ditambahkan</span>)</p>
 
-                                                    <p><span class="badge badge-success">2</span> Persiapkan Nilai <b>IP Semester 1 - 4 </b></p> --}}
+                                                    <p><span class="badge badge-success">2</span> Lakukan impor data berupa <i>Excel</i> sesuai template yang di unduh pada tombol <span class="badge badge-success"><i class="fa fa-upload" aria-hidden="true"> Import</i></span> Dan Jangan Lupa <i>Unduh Template Excelnya Terlebih Dahulu</i></p>
 
-                                                    <p><span class="badge badge-success">1</span> Keterangan angka desimal <b>,(koma) </b> diganti <b>. (titik)</b></p>
+                                                    <p><span class="badge badge-success">3</span> Selanjutnya lakukan perhitungan di submenu <b> Normalisasi data </b> pada menu <span class="badge badge-info"><i class="fa fa-star mr-1" aria-hidden="true"></i>Prediction</span></p>
+
                                                 </div>
                                             </div>
-                                            <div class="main-card mb-3 card">
-                                                <div class="card-body"><h5 class="card-title">Large Scrollable Area</h5>
-                                                    <p>Ini adalah hasil dimana data yang kamu masukkan sudah diklasifikasikan menggunakan algoritma k-NN</p>
-                                                    <p><span class="badge badge-warning">4</span> Hasil <b>Prediksi</b> Berupa Tingkat Bermain yang <span class="badge badge-success">RINGAN</span> dan <span class="badge badge-danger">BERAT</span></p>
-                                                    <p><span class="badge badge-warning">5</span> Jika sudah melakukan <i>Prediksi</i> Tekan tombol <b>OK</b></p>
+                                                <div class="main-card mb-3 card">
+                                                    <div class="card-body"><h5 class="card-title">Test Evaluasi k-NN</h5>
+                                                        <p>Jika sudah mempersiapkan data, langkah selanjutnya adalah melakukan klasifikasi tingkat bermain game pada anak yang dianalisis menggunakan algoritma k-NN</p>
+                                                        <p><span class="badge badge-info">1</span> Persiapkan data di menu <span class="badge badge-primary"><i class="fa fa-server mr-1" aria-hidden="true"></i></i>Test Data</span> kemudian pilih submenu <b> Evaluation Data </b></p>
+                                                        
+                                                        <p><span class="badge badge-info">2</span> Lakukan import data berupa <i>Excel</i> sesuai templat yang di unduh pada tombol <span class="badge badge-success"><i class="fa fa-upload" aria-hidden="true"> Import</i></span> Dan Jangan Lupa <i>Unduh Template Excelnya Terlebih Dahulu</i></p>
+                                                        <p><span class="badge badge-info">3</span> Selanjutnya lakukan perhitungan pada tombol <span class="badge badge-info"><i class="fa fa-calculator mr-1" aria-hidden="true"></i> Hitung k-NN</span> </p>
                                                 </div>
                                             </div>
                                         </div>
