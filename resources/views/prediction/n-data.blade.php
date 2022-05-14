@@ -68,15 +68,15 @@
                 </div>
             </div>
             <div class="card-body">
-            <div class="row">
-                @foreach ($question as $item)
-                <div class="col-4">
-                    <div class="alert alert-secondary" role="alert">
-                        Q{{ $item->id." : ".$item->qu_name }}
+                <div class="row">
+                    @foreach ($question as $item)
+                    <div class="col-4">
+                        <div class="alert alert-secondary" role="alert">
+                            Q{{ $item->id." : ".$item->qu_name }}
+                        </div>
                     </div>
+                    @endforeach
                 </div>
-                @endforeach
-            </div>
             </div>
         </div>
         

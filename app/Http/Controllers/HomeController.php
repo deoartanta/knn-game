@@ -18,6 +18,7 @@ use App\Http\Controllers\PredictionController;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Response;
 
 class HomeController extends Controller
 {
@@ -165,6 +166,19 @@ class HomeController extends Controller
         }
 
     }
+    public function set_k(Request $req){
+        DtEvals::where('dt_type','testDT')->update(['jml_k'=>$req->input('k')]);
+        return redirect()->back();
+    }
+    public function euclideanDistanceData(){
+        $dist = Distances::all();
+        $data = [
+            'jml_data' => $dist->count(),
+            'dist' => $dist
+        ];
+        return view('prediction.ed-data', $data);
+    }
+
     public function destroyDtUji($dt_type){
         // dd($dt_type);
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
@@ -325,5 +339,25 @@ class HomeController extends Controller
         $this->dt_evals->insert($dt_evalsArr_all);
         $this->pred_dt->insert($pred_dtArr_all);
         return Prediction::all();
+    }
+    function tdDownload(){
+        $file= public_path(). "/template/trainDT.xls";
+
+        $headers = array(
+        'Content-Type: application/vnd.ms-excel',
+        );
+
+        return Response::download($file, 'template-training-data.xls', $headers);
+        // return "download";
+    }
+    function testDtDownload(){
+        $file= public_path(). "/template/testDT.xls";
+
+        $headers = array(
+        'Content-Type: application/vnd.ms-excel',
+        );
+
+        return Response::download($file, 'template-test-data.xls', $headers);
+        // return "download";
     }
 }

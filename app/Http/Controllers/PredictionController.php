@@ -209,6 +209,7 @@ class PredictionController extends Controller
                             $dist_add['no_data']=$ev->no_eval;
                             $dist_add['nilai']=$dt_hsl_akar;
                             $dist_add['kelas']=$ev->kelas;
+                            $dist_add['updated_at']=date("Y-m-d h:i:s",strtotime("now"));
                             // dd($dist_add['kelas']);
                             $dist_all_arr[$no]=$dist_add;
                             // echo "==".$dt_hsl_akar.'<=>'.$dt_hsl_jml.'</br>';
@@ -241,6 +242,7 @@ class PredictionController extends Controller
                         $dist_add['no_data']=$ev->no_eval;
                         $dist_add['nilai']=$dt_hsl_akar;
                         $dist_add['kelas']=$ev->kelas;
+                        $dist_add['updated_at']=date("Y-m-d h:i:s",strtotime("now"));
                         // dd($dist_add['kelas']);
                         $dist_all_arr[$no]=$dist_add;
                         // echo "==".$dt_hsl_akar.'<=>'.$dt_hsl_jml.'</br>';

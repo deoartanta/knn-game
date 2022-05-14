@@ -80,7 +80,7 @@ class analyticController extends Controller
         return (view()->exists('dtlatih.n-data'))?view('dtlatih.n-data',$data):'';
     }
     public function createConfutionMatrix(){
-        $dtEvals = DtEvals::all();        
+        $dtEvals = DtEvals::all()->where('dt_type','testDT');        
         $bb=0;$br=0;$rb=0;$rr=0;$kk=0;$jml_k = $dtEvals->count()>0?$dtEvals->first()->jml_k:0;
         
         foreach ($dtEvals as $key => $val) {
@@ -105,7 +105,7 @@ class analyticController extends Controller
         }
         $jumlah_uji = $bb+$rr+$rb+$br;
         // dd($jumlah_uji);
-        if ($dtEvals->count()>0) {
+        if ($dtEvals->where('kelas_prediksi','>=','0')->count()>0) {
             $berat = $bb+$rr;
             $tidak_Berat = $br+$rb+$kk;
             // $jumlah_uji = $dtEvals->count();

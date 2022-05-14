@@ -17,7 +17,7 @@ class CreateDistanceTable extends Migration
             $table->id();
             $table->bigInteger('no_data');
             $table->decimal('nilai', $precision = 30, $scale = 12);
-            $table->integer('kelas');
+            $table->integer('kelas')->nullable();
             $table->timestamps();
             $table->foreign('no_data')
                 ->references('no')->on('dt_evals')->onDelete('cascade');

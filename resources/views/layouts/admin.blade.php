@@ -132,7 +132,7 @@
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="{{ route('n-data') }}" class="nav-link @yield('n-data')">
+                  <a href="{{ route('ed-data') }}" class="nav-link @yield('ed-data')">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Euclidean Distance</p>
                   </a>

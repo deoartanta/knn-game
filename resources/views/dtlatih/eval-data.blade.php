@@ -166,6 +166,7 @@
                 </div>
             </div>
             <div class="modal-footer bg-light">
+                <a href="{{ route('td-download') }}" class="btn btn-outline-secondary mr-auto" role="button">Download Template</a>
                 <button id="btn-import" type="submit" class="btn btn-success">Submit</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
             </div>
